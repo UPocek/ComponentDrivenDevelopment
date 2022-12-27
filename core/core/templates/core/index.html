@@ -1,48 +1,43 @@
-{% extends "core/base.html" %}
-{% block title %}Tim02 - sokic{% endblock %}
-{% block body %}
+{% extends "core/base.html" %} {% block title %}Tim02 - sokic{% endblock %}
+{%block body %}
 
 <div>
-    <div class="dropdown" id="providers_dropdown">
-      <div class="dropdown-trigger">
-        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-          <span>Select providers</span>
-          <span class="icon is-small">
-            <!--fontawesome required for the icon-->
-            <i class="fa fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
+  <div class="dropdown" id="providers_dropdown">
+    <div class="dropdown-trigger">
+      <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+        <span>Select providers</span>
+        <span class="icon is-small">
+          <!--fontawesome required for the icon-->
+          <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </span>
+      </button>
+    </div>
+    <div class="dropdown-menu" id="dropdown-providers-menu" role="menu">
+      <div class="dropdown-content">
+        {% for provider in providers %}
+        <a href="#" class="dropdown-item"> {{provider.name}} </a>
+        {% endfor %}
       </div>
-      <div class="dropdown-menu" id="dropdown-providers-menu" role="menu">
-        <div class="dropdown-content">
-          {% for provider in providers %}
-          <a href="#" class="dropdown-item">
-            {{provider.name}}
-          </a>
-          {% endfor %}
-        </div>
-      </div>
+    </div>
   </div>
 
   <div class="dropdown" id="dropdown-visualizators">
-      <div class="dropdown-trigger">
-        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-          <span>Select visualizators</span>
-          <span class="icon is-small">
-            <!--fontawesome required for the icon-->
-            <i class="fa fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
+    <div class="dropdown-trigger">
+      <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+        <span>Select visualizators</span>
+        <span class="icon is-small">
+          <!--fontawesome required for the icon-->
+          <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </span>
+      </button>
+    </div>
+    <div class="dropdown-menu" id="dropdown-visualizators-menu" role="menu">
+      <div class="dropdown-content">
+        {% for visualizator in visualizators %}
+        <a href="#" class="dropdown-item"> {{visualizator.name}} </a>
+        {% endfor %}
       </div>
-      <div class="dropdown-menu" id="dropdown-visualizators-menu" role="menu">
-        <div class="dropdown-content">
-          {% for visualizator in visualizators %}
-            <a href="#" class="dropdown-item">
-              {{visualizator.name}}
-            </a>
-          {% endfor %}
-        </div>
-      </div>
+    </div>
   </div>
 </div>
 
