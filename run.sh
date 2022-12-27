@@ -10,6 +10,10 @@ cd xml-provider
 python setup.py install
 cd ..
 
+cd ml-provider
+python setup.py install
+cd ..
+
 cd simple-visualizator
 python setup.py install
 cd ..
