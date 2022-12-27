@@ -8,5 +8,10 @@ setup(
     #     'core.django_apps':
     #         ['name=core.apps.CoreConfig']
     # },
+    entry_points={
+        'core.providers':['ml_provider=ml_provider.services.NeuralNetworkProvider:NeuralNetworkProvider']
+    },
+
+    package_data={'ml_provider': ['static/ml_provider/styles/*.css', 'static/ml_provider/scripts/*.js', 'templates/ml_provider/*.html']},
     zip_safe=False
 )
