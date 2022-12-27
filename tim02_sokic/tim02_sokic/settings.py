@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'core.apps.CoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,8 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-for ep in pkg_resources.iter_entry_points(group="core.django_apps"):
-    INSTALLED_APPS.append(ep.module_name)
+# for ep in pkg_resources.iter_entry_points(group="core.django_apps"):
+#     INSTALLED_APPS.append(ep.module_name)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
