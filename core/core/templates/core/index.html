@@ -15,12 +15,11 @@
       </div>
       <div class="dropdown-menu" id="dropdown-providers-menu" role="menu">
         <div class="dropdown-content">
+          {% for provider in providers %}
           <a href="#" class="dropdown-item">
-            Provider 1
+            {{provider.name}}
           </a>
-          <a class="dropdown-item">
-            Provider 2
-          </a>
+          {% endfor %}
         </div>
       </div>
   </div>
@@ -37,12 +36,11 @@
       </div>
       <div class="dropdown-menu" id="dropdown-visualizators-menu" role="menu">
         <div class="dropdown-content">
-          <a href="#" class="dropdown-item">
-            Visualizator 1
-          </a>
-          <a class="dropdown-item">
-            Visualizator 2
-          </a>
+          {% for visualizator in visualizators %}
+            <a href="#" class="dropdown-item">
+              {{visualizator.name}}
+            </a>
+          {% endfor %}
         </div>
       </div>
   </div>
