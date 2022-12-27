@@ -18,5 +18,9 @@ cd simple-visualizator
 python setup.py install
 cd ..
 
+cd advanced-vizualizator
+python setup.py install
+cd ..
+
 cd tim02_sokic
 python manage.py runserver
