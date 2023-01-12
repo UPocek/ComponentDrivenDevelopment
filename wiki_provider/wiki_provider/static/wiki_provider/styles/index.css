@@ -1,0 +1,30 @@
+form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type=text], input[type=number] {
+  padding: 12px 20px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+}
+
+button[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin-top: 10px;
+  border: none;
+  cursor: pointer;
+}
