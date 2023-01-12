@@ -4,10 +4,7 @@ setup(
     name="wiki_provider",
     version="0.1",
     packages=find_packages(),
-    # entry_points={
-    #     'core.django_apps':
-    #         ['name=core.apps.CoreConfig']
-    # },
+    install_requires=['Django>=2.1', 'beautifulsoup4>=4.10.0', 'requests>=2.27.1'],
     entry_points={
         'core.django_apps':
             ['name=wiki_provider.apps.WikiProviderConfig'],

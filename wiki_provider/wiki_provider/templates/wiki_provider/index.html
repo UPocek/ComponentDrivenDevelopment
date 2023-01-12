@@ -1,0 +1,30 @@
+{% extends "wiki_provider/base.html" %} {% block title %}Tim02 - sokic{% endblock %}
+
+{%block body %}
+
+<div>
+  <form action="{% url 'scrape_page' %}" method="get">
+  <div class="form-group">
+    <label for="name">Ime grafa</label>
+    <input type="text" class="form-control" name="name" id="name" placeholder="Enter width">
+  </div>
+  <div class="form-group">
+    <label for="wiki-link">Wikipedia Link</label>
+    <input type="text" class="form-control" name="wiki-link" id="wiki-link" placeholder="Enter Wikipedia Link">
+  </div>
+  <div class="form-group">
+    <label for="depth">Dubina</label>
+    <input type="number" class="form-control" name="depth" id="depth" placeholder="Enter depth">
+  </div>
+  <div class="form-group">
+    <label for="num-of-links">Broj linkova po stranici</label>
+    <input type="number" class="form-control" name="num-of-links" id="num-of-links" placeholder="Enter width">
+  </div>
+  <button type="submit" class="btn btn-primary">SKREJPUJ</button>
+</form>
+</div>
+
+
+{% endblock %}
+
+
