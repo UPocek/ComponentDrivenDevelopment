@@ -6,6 +6,15 @@ from core.models import Node, Graph
 # Create your views here.
 
 # This method is only for demonstration purposes
+
+visualizators = apps.get_app_config("core").visualizator_plugins
+print(visualizators)
+providers = apps.get_app_config("core").provider_plugins
+print(providers)
+context = {
+    'visualizators': visualizators,
+    'providers': providers
+}
 def test(request):
     g = Graph(name='Uki&Tasha graph')
     g.save()
@@ -39,13 +48,19 @@ def test(request):
     return HttpResponse(g.id)
 
 def index(request):
-    visualizators = apps.get_app_config("core").visualizator_plugins
-    print(visualizators)
-    providers = apps.get_app_config("core").provider_plugins
-    print(providers)
-    context = {
-        'visualizators': visualizators,
-        'providers': providers
-    }
     return render(request, 'core/index.html', context=context)
 
+
+
+def load_visualizator(request,visualizator_name):
+    plugin_name = visualizator_name
+    print(context)
+    print(plugin_name)
+    visualizator_plugins = apps.get_app_config("core").visualizator_plugins
+    print(visualizator_plugins)
+    for plugin in visualizator_plugins:
+        if plugin.identifier() == plugin_name:
+            context['content'] = plugin.show()
+            return render(request, 'core/graph.html', context=context)
+
+    return HttpResponse("This plugin is not installed")

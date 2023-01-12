@@ -15,6 +15,5 @@ setup(
             ['simple_visualizator=simple_visualizator.services.SimpleVisualizator:SimpleVisualizator']
     },
     package_data={'simple_visualizator': ['static/simple_visualizator/styles/*.css', 'static/simple_visualizator/scripts/*.js', 'templates/simple_visualizator/*.html']},
-
     zip_safe=False
 )

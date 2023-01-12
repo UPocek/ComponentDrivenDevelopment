@@ -33,14 +33,18 @@
     </div>
     <div class="dropdown-menu" id="dropdown-visualizators-menu" role="menu">
       <div class="dropdown-content">
-        {% for visualizator in visualizators %}
-        <a href="#" class="dropdown-item"> {{visualizator.name}} </a>
-        {% endfor %}
+          {% for visualizator in visualizators %}
+            <a type="submit" href="/load_visualizator/{{visualizator.name}}" class="dropdown-item" id={{visualizator.name}}> {{visualizator.name}} </a>
+          {% endfor %}
       </div>
     </div>
   </div>
 </div>
+{% autoescape off %}
+  <div id="visualization-container">
+      {{content}}
+  </div>
+{% endautoescape%}
 
 <script src="../../static/core/scripts/index.js"></script>
-
 {% endblock %}
