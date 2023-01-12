@@ -13,15 +13,23 @@ _titles = set()
 _num_of_nodes = 0
 _graph = None
 _parents = []
-_childrens = []
+_children = []
 
 
 def scrape(graph_name, wiki_link, depth, num_of_links):
-    global _depth, _num_of_links, _pages, _graph
+    global _depth, _num_of_links, _pages, _graph, _all_pages, _all_links, _subpages, _titles, _num_of_nodes, _parents, _children
     _depth = int(depth)
     _num_of_links = int(num_of_links)
+    _all_pages = set()
+    _all_links = set()
+    _pages = set()
+    _subpages = set()
+    _titles = set()
+    _num_of_nodes = 0
     _pages.add(wiki_link)
     _all_links.add(wiki_link)
+    _parents = []
+    _children = []
     _graph = Graph(name=graph_name)
     _graph.save()
     start_scraping()
@@ -30,45 +38,39 @@ def scrape(graph_name, wiki_link, depth, num_of_links):
 
 def start_scraping():
     global _depth, _num_of_links, _pages, _subpages
-    for i in range(_depth):
+    for i in range(_depth + 1):
         scrape_one_level()
         link_nodes()
-        
+
 
 def link_nodes():
-    global _parents, _childrens
-    if _parents != []:
+    global _parents, _children
+    if _parents:
         num = 0
         for parent in _parents:
             for j in range(_num_of_links):
-                parent.add_neighbour(_childrens[num])
+                parent.add_neighbour(_children[num])
                 num += 1
-    _parents = _childrens
-    _childrens = []
+    _parents = _children
+    _children = []
 
 
 def scrape_one_level():
-    global _depth, _num_of_links, _pages, _subpages, _all_pages, _num_of_nodes, _graph, _all_links, _childrens, _parents
-    print(len(_all_links))
+    global _depth, _num_of_links, _pages, _subpages, _all_pages, _num_of_nodes, _graph, _all_links, _children, _parents
     children_num = 0
     for page in _pages:
         if page in _all_pages:
             continue
         soup = make_soup_from_page(page)
-
         title = add_title(soup)
         if title is None:
             continue
-
         description = add_description(soup)
-
+        links = find_all_sublinks(soup)
         _num_of_nodes += 1
-        node = Node(atributes={'title': str(title), 'description': str(description)})
+        node = Node(atributes={'title': str(title), 'description': str(description), 'number_of_links': str(links)})
         _graph.add_node(node)
-        _childrens.append(node)
-
-        find_all_sublinks(soup)
-
+        _children.append(node)
 
     _all_pages |= _pages
     _pages = _subpages.copy()
@@ -98,12 +100,14 @@ def add_title(soup):
 def find_all_sublinks(soup):
     global _depth, _num_of_links, _pages, _subpages
     num = 0
-    for link in soup.find_all('a'):
+    links = soup.find_all('a')
+    for link in links:
         href = link.get('href')
         if href is not None and is_href_wiki_link(href) and add_link(href):
             num += 1
         if num == _num_of_links:
             break
+    return len(links)
 
 def add_link(href):
     global _all_links
