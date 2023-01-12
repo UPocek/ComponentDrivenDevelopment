@@ -2,7 +2,7 @@ cd core
 python setup.py install
 cd ..
 
-cd wiki-provider
+cd wiki_provider
 python setup.py install
 cd ..
 

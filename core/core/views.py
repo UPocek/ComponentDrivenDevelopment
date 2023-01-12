@@ -60,7 +60,7 @@ def load_visualizator(request,visualizator_name):
     print(visualizator_plugins)
     for plugin in visualizator_plugins:
         if plugin.identifier() == plugin_name:
-            context['content'] = plugin.show()
+            context['content'] = plugin.show("Visualisation test graph")
             return render(request, 'core/graph.html', context=context)
 
     return HttpResponse("This plugin is not installed")

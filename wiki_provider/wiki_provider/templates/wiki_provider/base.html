@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="../../static/core/styles/styles.css">
-    {% block css %}
-    {% endblock %}
+    <link rel="stylesheet" href="{% static 'wiki_provider/styles/index.css' %}">
+
 </head>
 <body>
     {% block body %}
