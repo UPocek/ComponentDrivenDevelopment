@@ -14,6 +14,7 @@ _num_of_nodes = 0
 _graph = None
 _parents = []
 _children = []
+_map = {}
 
 
 def scrape(graph_name, wiki_link, depth, num_of_links):
@@ -44,33 +45,36 @@ def start_scraping():
 
 
 def link_nodes():
-    global _parents, _children
+    global _parents, _children, _map
     if _parents:
         num = 0
         for parent in _parents:
-            for j in range(_num_of_links):
+            print(str(_map.get(parent)) + '\n')
+            for j in range(_map.get(parent)):
                 parent.add_neighbour(_children[num])
                 num += 1
-    _parents = _children
+    _parents = _children.copy()
     _children = []
 
 
 def scrape_one_level():
-    global _depth, _num_of_links, _pages, _subpages, _all_pages, _num_of_nodes, _graph, _all_links, _children, _parents
+    global _depth, _num_of_links, _pages, _subpages, _all_pages, _num_of_nodes, _graph, _all_links, _children, _parents, _map
     children_num = 0
     for page in _pages:
-        if page in _all_pages:
-            continue
+        # if page in _all_pages:
+        #     continue
         soup = make_soup_from_page(page)
         title = add_title(soup)
-        if title is None:
-            continue
-        description = add_description(soup)
-        links = find_all_sublinks(soup)
+        # if title is None:
+        #     continue
+        # description = add_description(soup)
+        links, found = find_all_sublinks(soup)
         _num_of_nodes += 1
-        node = Node(atributes={'title': str(title), 'description': str(description), 'number_of_links': str(links)})
+        node = Node(atributes={'title': str(title), 'description': str("description"), 'number_of_links': str(links)})
         _graph.add_node(node)
         _children.append(node)
+        _map[node] = found
+        print(_map)
 
     _all_pages |= _pages
     _pages = _subpages.copy()
@@ -107,7 +111,7 @@ def find_all_sublinks(soup):
             num += 1
         if num == _num_of_links:
             break
-    return len(links)
+    return len(links), num
 
 def add_link(href):
     global _all_links
