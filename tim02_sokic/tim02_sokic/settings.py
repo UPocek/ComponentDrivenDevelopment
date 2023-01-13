@@ -43,8 +43,9 @@ INSTALLED_APPS = [
 ]
 
 for ep in pkg_resources.iter_entry_points(group="core.django_apps"):
-    if (ep.module_name not in INSTALLED_APPS):
+    if ep.module_name not in INSTALLED_APPS:
         INSTALLED_APPS.append(ep.module_name)
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,7 +58,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'tim02_sokic.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,7 +73,7 @@ TEMPLATES = [
         },
     },
 ]
-
+print(TEMPLATES)
 WSGI_APPLICATION = 'tim02_sokic.wsgi.application'
 
 

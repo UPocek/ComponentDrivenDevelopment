@@ -67,10 +67,10 @@ def scrape_one_level():
         title = add_title(soup)
         # if title is None:
         #     continue
-        # description = add_description(soup)
+        description = add_description(soup)
         links, found = find_all_sublinks(soup)
         _num_of_nodes += 1
-        node = Node(atributes={'title': str(title), 'description': str("description"), 'number_of_links': str(links)})
+        node = Node(atributes={'title': str(title), 'description': str(description), 'number_of_links': str(links)})
         _graph.add_node(node)
         _children.append(node)
         _map[node] = found
