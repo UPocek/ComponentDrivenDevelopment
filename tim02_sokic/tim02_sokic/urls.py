@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("core.urls")),
     path('wiki/', include("wiki_provider.urls")),
+    path('ml/', include("ml_provider.urls")),
 ]
 
 
