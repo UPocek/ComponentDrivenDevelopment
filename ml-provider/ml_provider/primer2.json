@@ -1,0 +1,21 @@
+{
+    "name": "_caffe2::BBoxTransform",
+    "inputs": [
+      { "name": "rois", "type": "Tensor" },
+      { "name": "deltas", "type": "Tensor" },
+      { "name": "im_info", "type": "Tensor" },
+      { "name": "weights", "type": "float32[]" },
+      { "name": "apply_scale", "type": "boolean" },
+      { "name": "rotated", "type": "boolean" },
+      { "name": "angle_bound_on", "type": "boolean" },
+      { "name": "angle_bound_lo", "type": "int64" },
+      { "name": "angle_bound_hi", "type": "int64" },
+      { "name": "clip_angle_thresh", "type": "float32" },
+      { "name": "legacy_plus_one", "type": "boolean" },
+      { "podgraf":{"name": "legacy_plus_one", "type": "boolean" }}
+    ],
+    "outputs": [
+      { "name": "output_0", "type": "Tensor" },
+      { "name": "output_1", "type": "Tensor" }
+    ]
+  }
