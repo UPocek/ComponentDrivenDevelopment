@@ -18,7 +18,7 @@ cd simple-visualizator
 python setup.py install
 cd ..
 
-cd advanced-vizualizator
+cd advanced-visualizator
 python setup.py install
 cd ..
 

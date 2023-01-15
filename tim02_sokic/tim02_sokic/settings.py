@@ -73,7 +73,6 @@ TEMPLATES = [
         },
     },
 ]
-print(TEMPLATES)
 WSGI_APPLICATION = 'tim02_sokic.wsgi.application'
 
 
