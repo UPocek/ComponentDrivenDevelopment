@@ -15,7 +15,9 @@
     <div class="dropdown-menu" id="dropdown-providers-menu" role="menu">
       <div class="dropdown-content">
         {% for provider in providers %}
-        <a href="#" class="dropdown-item"> {{provider.name}} </a>
+        <a href="/{{provider.identifier}}" class="dropdown-item">
+          {{provider.name}}
+        </a>
         {% endfor %}
       </div>
     </div>
@@ -33,17 +35,22 @@
     </div>
     <div class="dropdown-menu" id="dropdown-visualizators-menu" role="menu">
       <div class="dropdown-content">
-          {% for visualizator in visualizators %}
-            <a type="submit" href="/load_visualizator/{{visualizator.name}}" class="dropdown-item" id={{visualizator.name}}> {{visualizator.name}} </a>
-          {% endfor %}
+        {% for visualizator in visualizators %}
+        <a
+          type="submit"
+          href="/load_visualizator/{{visualizator.name}}"
+          class="dropdown-item"
+          id="{{visualizator.name}}"
+        >
+          {{visualizator.name}}
+        </a>
+        {% endfor %}
       </div>
     </div>
   </div>
 </div>
 {% autoescape off %}
-  <div id="visualization-container">
-      {{content}}
-  </div>
+<div id="visualization-container">{{content}}</div>
 {% endautoescape%}
 
 <script src="../../static/core/scripts/index.js"></script>

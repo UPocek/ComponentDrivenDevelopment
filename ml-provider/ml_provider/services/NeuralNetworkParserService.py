@@ -13,8 +13,7 @@ def convert_jsonfile_to_data_structure(filename:str):
 def generate_graph(graph_name):
     graph = Graph(name=graph_name)
     graph.save()
-    print(os.getcwd())
-    json_data_structure = convert_jsonfile_to_data_structure("..\ml-provider\ml_provider\\nn1.json")
+    json_data_structure = convert_jsonfile_to_data_structure("..\ml-provider\ml_provider\examples\example.json")
     generate_nodes_from_json(graph, json_data_structure)
 
     return graph
