@@ -2,80 +2,60 @@ from bs4 import BeautifulSoup
 import requests as r
 from core.models import Node, Graph
 
-
-_depth = 0
-_num_of_links = 0
-_all_pages = set()
-_all_links = set()
 _pages = set()
-_subpages = set()
 _titles = set()
-_num_of_nodes = 0
+_num_of_links = 0
+_depth = 0
 _graph = None
-_parents = []
-_children = []
-_map = {}
 
+map = {}
 
 def scrape(graph_name, wiki_link, depth, num_of_links):
-    global _depth, _num_of_links, _pages, _graph, _all_pages, _all_links, _subpages, _titles, _num_of_nodes, _parents, _children
+    global _pages, _num_of_links, _depth, _graph, _titles
+    _pages = set()
+    _titles = set()
     _depth = int(depth)
     _num_of_links = int(num_of_links)
-    _all_pages = set()
-    _all_links = set()
-    _pages = set()
-    _subpages = set()
-    _titles = set()
-    _num_of_nodes = 0
+
     _pages.add(wiki_link)
-    _all_links.add(wiki_link)
-    _parents = []
-    _children = []
     _graph = Graph(name=graph_name)
     _graph.save()
-    start_scraping()
+
+    scrape_node(None, wiki_link, 0)
 
 
-def start_scraping():
-    global _depth, _num_of_links, _pages, _subpages
-    for i in range(_depth + 1):
-        scrape_one_level()
-        link_nodes()
+def scrape_node(parent, child, lvl):
+    global _pages, _num_of_links, _depth, _graph, _titles
+    if lvl > _depth:
+        return
+    soup = make_soup_from_page(child)
 
+    title = soup.title.string.replace(" - Wikipedia", "")
+    if title in _titles:
+        link_with_parent(title, parent)
+        return
+    _titles.add(title)
 
-def link_nodes():
-    global _parents, _children, _map
-    if _parents:
-        num = 0
-        for parent in _parents:
-            for j in range(_map.get(parent)):
-                parent.add_neighbour(_children[num])
-                num += 1
-    _parents = _children.copy()
-    _children = []
+    description = add_description(soup)
 
+    all_links = soup.find_all('a')
+    node = Node(atributes={'title': str(title), 'description': description, 'number_of_links': len(all_links)})
+    _graph.add_node(node)
+    map[title] = node
 
-def scrape_one_level():
-    global _depth, _num_of_links, _pages, _subpages, _all_pages, _num_of_nodes, _graph, _all_links, _children, _parents, _map
-    children_num = 0
-    for page in _pages:
-        # if page in _all_pages:
-        #     continue
-        soup = make_soup_from_page(page)
-        title = add_title(soup)
-        # if title is None:
-        #     continue
-        description = add_description(soup)
-        links, found = find_all_sublinks(soup)
-        _num_of_nodes += 1
-        node = Node(atributes={'title': str(title), 'description': str(description), 'number_of_links': str(links)})
-        _graph.add_node(node)
-        _children.append(node)
-        _map[node] = found
+    if parent != None:
+        parent.add_neighbour(node)
 
-    _all_pages |= _pages
-    _pages = _subpages.copy()
-    _subpages = set()
+    num = 0
+    for link in all_links:
+        href = link.get('href')
+        if href is not None and is_href_wiki_link(href):
+            num += 1
+            link = make_link_from_href(href)
+            scrape_node(node, link, lvl+1)
+        if num == _num_of_links:
+            break
+
 
 
 def add_description(soup):
@@ -87,37 +67,6 @@ def add_description(soup):
             break
     description = description.replace('"', '')
     return description
-
-
-def add_title(soup):
-    global _titles
-    title = soup.title.string.replace(" - Wikipedia", "")
-    if title in _titles:
-        return None
-    _titles.add(title)
-    return title
-
-
-def find_all_sublinks(soup):
-    global _depth, _num_of_links, _pages, _subpages
-    num = 0
-    links = soup.find_all('a')
-    for link in links:
-        href = link.get('href')
-        if href is not None and is_href_wiki_link(href) and add_link(href):
-            num += 1
-        if num == _num_of_links:
-            break
-    return len(links), num
-
-def add_link(href):
-    global _all_links
-    link = make_link_from_href(href)
-    if link in _all_links:
-        return False
-    _all_links.add(link)
-    _subpages.add(link)
-    return True
 
 
 def make_link_from_href(href):
@@ -132,3 +81,7 @@ def make_soup_from_page(page):
     wiki_page_request = r.get(page)
     wiki_page_text = wiki_page_request.text
     return BeautifulSoup(wiki_page_text, 'html.parser')
+
+
+def link_with_parent(title, parent):
+    parent.add_neighbour(map[title])
