@@ -34,7 +34,6 @@ def scrape(graph_name, wiki_link, depth, num_of_links):
     _graph = Graph(name=graph_name)
     _graph.save()
     start_scraping()
-    print(_graph)
 
 
 def start_scraping():
@@ -49,7 +48,6 @@ def link_nodes():
     if _parents:
         num = 0
         for parent in _parents:
-            print(str(_map.get(parent)) + '\n')
             for j in range(_map.get(parent)):
                 parent.add_neighbour(_children[num])
                 num += 1
@@ -74,7 +72,6 @@ def scrape_one_level():
         _graph.add_node(node)
         _children.append(node)
         _map[node] = found
-        print(_map)
 
     _all_pages |= _pages
     _pages = _subpages.copy()
