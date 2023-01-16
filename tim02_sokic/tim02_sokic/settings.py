@@ -57,7 +57,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'tim02_sokic.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,7 +72,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'tim02_sokic.wsgi.application'
 
 

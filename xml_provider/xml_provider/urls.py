@@ -3,6 +3,6 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.index, name='page'),
     path('xml_doc_parser', views.parse_xml_doc, name="parse_xml_doc")
 ]

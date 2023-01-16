@@ -1,0 +1,232 @@
+<style>
+  .node_av {
+    cursor: pointer;
+  }
+
+  .link_av {
+    fill: #1b1b1b;
+    stroke: #fdb0b0;
+    stroke-width: 3px;
+  }
+
+  .line_break {
+  }
+
+  .node_container {
+  }
+
+  .node_title {
+    font-weight: bold;
+  }
+</style>
+<script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
+<script>
+  function nodeClick(clickedElement) {
+    let innerElement = d3
+      .select(clickedElement)
+      .select("rect.node_container")[0][0];
+    output = "";
+    output += `You pressend on node ${clickedElement.id}\n`;
+    output += `Position:\nx: ${innerElement.__data__.x}, y: ${innerElement.__data__.y}`;
+    alert(output);
+  }
+</script>
+<svg width="100%" height="100%"></svg>
+<script>
+      var all_nodes = {
+          {% for n in nodes %}
+          'node_{{n.id}}': {
+            atributes: [
+            {% for k, v in n.atributes.items %}
+                {
+                '{{k}}':"{{v}}"
+                },
+            {% endfor %}
+            ]
+          },
+          {% endfor %}
+      };
+
+    var all_links=[
+        {% for n in nodes %}
+           {% for neighbour in n.get_all_neighbours %}
+              {
+                  source:"node_{{n.id}}",
+                  target:"node_{{neighbour.id}}"
+              },
+           {% endfor %}
+        {% endfor %}
+    ];
+
+    all_links.forEach(function(link) {
+        link.source = all_nodes[link.source];
+        link.target = all_nodes[link.target];
+    });
+
+    var force = d3.layout.force()
+        .size([window.screen.width, window.screen.height])
+        .nodes(d3.values(all_nodes))
+        .links(all_links)
+        .on("tick", tick)
+        .linkDistance(1000)
+        .charge(-1000)
+        .start();
+
+    var svg=d3.select('svg');
+
+    svg.call(d3.behavior.zoom().on("zoom", function () {
+        //svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+        svg.attr("transform", "translate(" + 1 + ")" + " scale(" + d3.event.scale + ")")
+    }));
+
+    var link = svg.selectAll('.link_av')
+        .data(all_links)
+        .enter().append('line')
+        .attr('class', 'link_av');
+
+    var node = svg.selectAll('.node_av')
+        .data(force.nodes())
+        .enter().append('g')
+        .attr('class', 'node_av')
+        .attr('id', function(d){return d.index;})
+        .on('click',function(){
+           nodeClick(this);
+        });
+
+    d3.selectAll('.node_av').each(function(d){advancedVizualization(d);});
+
+    function advancedVizualization(d){
+
+      var maxWidth = 300;
+      var numberOfFields=d.atributes.length;
+
+      var textSize = 15;
+      var padding = 10;
+      var extraSpaceForCutout = 12;
+      var line_stroke_height = 2;
+      var extraSpaceNeeded = calculateExtraSpace(d, textSize, maxWidth, padding);
+      var width = calculateWidth(d, textSize, maxWidth, padding);
+      var height = extraSpaceForCutout + padding + textSize + line_stroke_height + (numberOfFields) * (textSize + padding) + extraSpaceNeeded + padding;
+
+      d3.select(`g[id="${d.index}"]`)
+          .append('rect')
+          .attr('x',0)
+          .attr('y',0)
+          .attr('width',width)
+          .attr('height',height)
+          .attr('fill','rgba(0, 0, 0, 0.8)')
+          .attr('class', 'node_container');
+
+      d3.select(`g[id="${d.index}"]`)
+          .append('text')
+          .attr('x',width/2)
+          .attr('y',extraSpaceForCutout + padding)
+          .attr('text-anchor','middle')
+          .attr('font-size',textSize)
+          .attr('font-family','sans-serif')
+          .attr('fill','rgba(255, 255, 255, 0.8)')
+          .text(d.index)
+          .attr('class', 'node_title');
+
+      d3.select(`g[id="${d.index}"]`)
+          .append('line')
+          .attr('x1',0 + padding)
+          .attr('y1',padding + textSize + padding)
+          .attr('x2',width - padding)
+          .attr('y2',padding + textSize + padding)
+          .attr('stroke','rgba(255, 255, 255, 0.2)')
+          .attr('stroke-width',line_stroke_height)
+          .attr('class', 'line_break');
+
+      var startPosition = extraSpaceForCutout + padding + textSize + padding + line_stroke_height + padding;
+
+      for(let i=0;i<numberOfFields;i++){
+          for(let a_key in d.atributes[i]){
+              d3.select(`g[id="${d.index}"]`)
+              .append('text')
+              .attr('x',padding)
+              .attr('y',startPosition)
+              .attr('text-anchor','start')
+              .attr('font-size',textSize)
+              .attr('font-family','sans-serif')
+              .attr('fill','rgba(255, 255, 255, 0.8)')
+              .text(`${a_key}: ${d.atributes[i][a_key]}`)
+              .call(wrap, width, padding);
+              startPosition += calculateAttributeHight(d.atributes[i], textSize, width);
+          }
+      }
+    }
+
+    function tick(e) {
+        node.attr("transform", function(d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        }).call(force.drag);
+        link.attr('x1', function(d) { return d.source.x; })
+            .attr('y1', function(d) { return d.source.y; })
+            .attr('x2', function(d) { return d.target.x; })
+            .attr('y2', function(d) { return d.target.y; });
+    }
+
+    function wrap(text, width, padding) {
+      text.each(function () {
+          var text = d3.select(this),
+              words = text.text().split(/\s+/).reverse(),
+              word,
+              line = [],
+              lineNumber = 0,
+              lineHeight = 1.1, // ems
+              x = text.attr("x"),
+              y = text.attr("y"),
+              dy = 0, //parseFloat(text.attr("dy")),
+              tspan = text.text(null)
+                          .append("tspan")
+                          .attr("x", x)
+                          .attr("y", y)
+                          .attr("dy", dy + "em");
+          while (word = words.pop()) {
+              line.push(word);
+              tspan.text(line.join(" "));
+              if (tspan.node().getComputedTextLength() > width - padding) {
+                  line.pop();
+                  tspan.text(line.join(" "));
+                  line = [word];
+                  tspan = text.append("tspan")
+                              .attr("x", x)
+                              .attr("y", y)
+                              .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                              .text(word);
+              }
+          }
+      });
+  }
+
+  function calculateExtraSpace(d, fontSize, maxWidth){
+    let extraLinesNeeded = 0;
+    for(let i=0;i<d.atributes.length;i++){
+        for(let a_key in d.atributes[i]){
+            extraLinesNeeded += (`${a_key}: ${d.atributes[i][a_key]}`.length * fontSize) / (maxWidth * 1.9);
+        }
+    }
+    return extraLinesNeeded * fontSize;
+  }
+
+  function calculateAttributeHight(d, fontSize, maxWidth){
+    height = 1
+    for(let a_key in d){
+      height += (`${a_key}: ${d[a_key]}`.length * fontSize) / (maxWidth * 1.9);
+    }
+    return height * fontSize;
+  }
+
+  function calculateWidth(d, fontSize, maxWidth){
+    let maxSizeRequired = 0;
+    for(let i=0;i<d.atributes.length;i++){
+        for(let a_key in d.atributes[i]){
+            if(`${a_key}: ${d.atributes[i][a_key]}`.length * fontSize > maxSizeRequired){
+                maxSizeRequired = `${a_key}: ${d.atributes[i][a_key]}`.length * fontSize;
+            }
+        }
+    }
+    return maxSizeRequired > maxWidth ? maxWidth : maxSizeRequired;
+  }
+</script>

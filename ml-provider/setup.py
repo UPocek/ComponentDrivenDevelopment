@@ -9,6 +9,7 @@ setup(
     #         ['name=core.apps.CoreConfig']
     # },
     entry_points={
+        'core.django_apps':['name=ml_provider.apps.MlProviderConfig'],
         'core.providers':['ml_provider=ml_provider.services.NeuralNetworkProvider:NeuralNetworkProvider']
     },
 
