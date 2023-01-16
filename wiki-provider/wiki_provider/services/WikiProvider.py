@@ -1,7 +1,8 @@
 # from core.core.services.Providers import Provider
+from core.services.Providers import Provider
 
 
-class WikiProvider():
+class WikiProvider(Provider):
     def identifier(self):
         return "wiki"
 
