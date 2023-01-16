@@ -1,12 +1,13 @@
 # from core.core.services.Providers import Provider
+from core.services.Providers import Provider
 
 
-class XmlProvider():
+class WikiProvider(Provider):
     def identifier(self):
-        return "xml"
+        return "wiki"
 
     def name(self):
-        return "XML provider"
+        return "Wikipedia provider"
 
     def load(self):
         pass

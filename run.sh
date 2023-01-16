@@ -6,7 +6,7 @@ cd wiki_provider
 python setup.py install
 cd ..
 
-cd xml-provider
+cd xml_provider
 python setup.py install
 cd ..
 
