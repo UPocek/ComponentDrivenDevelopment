@@ -13,10 +13,23 @@ class AdvencedVisualizator(Visualizator):
         return "Advanced visualizator"
 
     def show(self):
-        allGraphs = Graph.objects.all()
-        numberOfGraphs = len(Graph.objects.all())
-        if(numberOfGraphs > 0):
-            g = allGraphs[numberOfGraphs-1]
-            return render_to_string("advanced_visualizator/advanced_visualizator.html",context={'nodes': g.get_all_nodes()})
+        all_graphs = Graph.objects.all()
+        number_of_graphs = len(all_graphs)
+        g = all_graphs[number_of_graphs-1]
+        nodes = g.get_all_nodes()
+        edges = []
+        for node in nodes:
+            for neighbour in node.get_all_neighbours():
+                edges.append({"source": node.id, "target": neighbour.id})
+        list_nodes = [entry for entry in nodes.values()]
+        name_indexer = dict((p['id'], i) for i, p in enumerate(list_nodes))
+        list_edges = []
+        for edge in edges:
+            source = edge["source"]
+            target = edge["target"]
+            list_edges.append( {"source":name_indexer[source],"target":name_indexer[target]})
+        content = {"nodes": list_nodes,
+                  "edges":list_edges}
+        return render_to_string("advanced_visualizator/advanced_visualizator.html",context=content)
         
         
