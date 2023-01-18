@@ -1,6 +1,6 @@
-pip uninstall core
-pip uninstall wiki_provider
-pip uninstall xml_provider
-pip uninstall ml_provider
-pip uninstall simple_visualizator
-pip uninstall advanced_visualizator
+pip uninstall core -y
+pip uninstall wiki_provider -y
+pip uninstall xml_provider -y
+pip uninstall ml_provider -y
+pip uninstall simple_visualizator -y
+pip uninstall advanced_visualizator -y

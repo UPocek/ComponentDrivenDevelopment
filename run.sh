@@ -2,11 +2,11 @@ cd core
 python setup.py install
 cd ..
 
-cd wiki-provider
+cd wiki_provider
 python setup.py install
 cd ..
 
-cd xml-provider
+cd xml_provider
 python setup.py install
 cd ..
 
@@ -18,7 +18,7 @@ cd simple-visualizator
 python setup.py install
 cd ..
 
-cd advanced-vizualizator
+cd advanced-visualizator
 python setup.py install
 cd ..
 

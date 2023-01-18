@@ -1,0 +1,29 @@
+{% extends "xml_provider/base.html" %} {% block title %}Tim02 - sokic{% endblock %}
+{%block body %}
+
+<div id = "whole-form">
+  <form action="{% url 'parse_xml_doc' %}">
+  <div class = "form-group">
+    <label for="graph-name">Graph Name:</label>
+    <input type="text" id="graph-name" name="graph-name">
+  </div>
+    <div class = "form-group">
+      <label for="graph-description">Graph Description:</label>
+      <input type="text" id="graph-description" name="graph-description">
+    </div>
+  <div class = "form-group">
+    <label for="xml-docs">XML Docs:</label>
+    <select id="xml-docs" name="xml-docs">
+      {% for value, text in options %}
+      <option value="{{ value }}">{{ text }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit">Submit</button>
+</form>
+
+</div>
+
+
+
+{% endblock %}

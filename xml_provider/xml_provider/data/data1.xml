@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<circuits>
+    <hungaroring>
+        <winners>
+            <year year="2020">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+            <year year="2019">
+                <driver>Max Verstappen</driver>
+                <team>Red Bull Racing</team>
+            </year>
+            <year year="2018">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+            <year year="2017">
+                <driver>Sebastian Vettel</driver>
+                <team>Ferrari</team>
+            </year>
+            <year year="2016">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+        </winners>
+    </hungaroring>
+    <silverstone>
+        <winners>
+        <year year="2020">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        <year year="2019">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        <year year="2018">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        <year year="2017">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        <year year="2016">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        </winners>
+    </silverstone>
+    <castellete>
+        <winners>
+            <year year="2019">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+            <year year="2018">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+            <year year="2017">
+                <driver>Sebastian Vettel</driver>
+                <team>Ferrari</team>
+            </year>
+            <year year="2016">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+        </winners>
+    </castellete>
+</circuits>

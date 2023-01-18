@@ -9,3 +9,4 @@ dropdown_visualizators.addEventListener('click', function(event) {
   event.stopPropagation();
   dropdown_visualizators.classList.toggle('is-active');
 });
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<university>
+    <campus>
+        <name>Main Campus</name>
+        <building>
+            <name>Library</name>
+            <location>North side of campus</location>
+            <room>
+                <name>Research Room</name>
+                <facility>
+                    <name>Computer Lab</name>
+                    <quantity>20</quantity>
+                    <specification>
+                        <brand>Dell</brand>
+                        <model>Optiplex</model>
+                        <processor>i7</processor>
+                        <RAM>16 GB</RAM>
+                        <storage>1 TB</storage>
+                    </specification>
+                </facility>
+            </room>
+            <room>
+                <name>Reading Room</name>
+                <facility>
+                    <name>Bookshelf</name>
+                    <quantity>50</quantity>
+                </facility>
+            </room>
+        </building>
+        <building>
+            <name>Dormitory</name>
+            <location>South side of campus</location>
+            <room>
+                <name>Single Room</name>
+                <facility>
+                    <name>Bed</name>
+                    <quantity>100</quantity>
+                </facility>
+                <facility>
+                    <name>Desk</name>
+                    <quantity>100</quantity>
+                </facility>
+            </room>
+            <room>
+                <name>Double Room</name>
+                <facility>
+                    <name>Bed</name>
+                    <quantity>50</quantity>
+                </facility>
+                <facility>
+                    <name>Desk</name>
+                    <quantity>50</quantity>
+                </facility>
+            </room>
+        </building>
+    </campus>
+</university>
