@@ -8,6 +8,12 @@
     stroke: #fdb0b0;
     stroke-width: 3px;
   }
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
 </style>
 <script>
   function nodeClick(clickedElement) {
@@ -29,24 +35,25 @@
 
     var links = {{edges|safe}}
 
-    const svg = d3.select("svg");
-
     var width = window.screen.width, height = window.screen.height
     var simulation = d3.forceSimulation(nodes)
-        .force('charge', d3.forceManyBody().strength(-2000))
+        .force('charge', d3.forceManyBody().strength(-10))
         .force('center', d3.forceCenter(width / 3, height / 3))
-        .force('link', d3.forceLink().links(links))
+        .force('link', d3.forceLink().links(links).distance(200))
         .on('tick', ticked);
 
     let zoom = d3.zoom().on('zoom', handleZoom);
 
+    const svg = d3.select("svg");
+    const offsetTransform = d3.zoomIdentity.translate(-width/2, -height/2);
+    svg.attr("transform", offsetTransform);
+
     function handleZoom(e) {
-        //d3.selectAll('svg line.line_av').attr('transform', e.transform);
-        //d3.selectAll('svg g.node_av').attr('transform', e.transform)
+      //d3.selectAll('svg').attr('transform', e.transform);
     }
 
     function initZoom() {
-        d3.select('svg').call(zoom);
+      d3.select('svg').call(zoom);
     }
 
     function insertLinks(){
@@ -146,7 +153,7 @@
           .attr('font-size', textSize)
           .attr('font-family','sans-serif')
           .attr('fill','rgba(255, 255, 255, 0.8)')
-          .text(d.id);
+          .text(d.index);
 
       d3.select(`g[id="${d.id}"]`)
           .append('line')
