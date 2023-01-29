@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from core.models import Node, Graph
 
 
 class Visualizator(ABC):
@@ -11,5 +12,5 @@ class Visualizator(ABC):
         pass
 
     @abstractmethod
-    def show(self):
+    def show(self, grapg:Graph):
         pass
