@@ -1,47 +1,43 @@
-{% extends "core/index.html" %} {% block tree_view %}
 <style>
-  .node circle {
+  .node_tv circle {
     fill: #fff;
     stroke: steelblue;
     stroke-width: 3px;
   }
 
-  .node text {
+  .node_tv text {
     font: 12px sans-serif;
   }
 
-  .link {
+  .link_tv {
     fill: none;
     stroke: #ccc;
     stroke-width: 2px;
   }
 </style>
-<div style="width: 400; height: 600; overflow: scroll">
-  <svg width="1300" height="500"></svg>
-</div>
+<svg id="tree_view_svg"></svg>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
-    var nodes = {{ tree_view|safe }};
+    let nodeForTree = {{ tree_view|safe }};
 
-    var rootNode = nodes[Object.keys(nodes)[0]];
-    console.log(rootNode)
-    var treeData = {
+    let rootNode = nodeForTree[Object.keys(nodeForTree)[0]];
+    let treeData = {
       name: rootNode['id'],
       children: [],
       atributes:rootNode['atributes']
     };
 
     function getNeigbours(parent){
-      var new_nodes = nodes[parent.data.name]['neighbours']
+      let new_nodes = nodeForTree[parent.data.name]['neighbours']
       if(new_nodes != []){
       new_nodes.forEach(function(d){
-          var newNodeObj = {
+          let newNodeObj = {
               name: d.id,
               atributes: d.atributes,
               children: [],
             };
             //Creates new Node
-            var newNode = d3.hierarchy(newNodeObj);
+            let newNode = d3.hierarchy(newNodeObj);
             newNode.depth = parent.depth + 1;
             newNode.height = parent.height - 1;
             newNode.parent = parent;
@@ -49,22 +45,22 @@
       })}
     }
 
-    var margin = { top: 20, right: 90, bottom: 30, left: 90 },
-      width = 1300
-      height = 500
+    let margin = { top: 20, right: 20, bottom: 80, left: 30 },
+      width = 13000
+      height = window.screen.height - 380
 
-    var svg = d3
-      .select("svg")
+    let svg_for_tree = d3
+      .select("#tree_view_svg")
       .attr("width", width + margin.right + margin.left)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var i = 0,
+    let i = 0,
       duration = 750,
       root;
 
-    var treemap = d3.tree().size([height, width]);
+    let treemap = d3.tree().size([height, width]);
 
     root = d3.hierarchy(treeData, function (d) {
       return d.children;
@@ -95,7 +91,7 @@
         }
     }
 
-    function wrap(text, width, padding, initial_y_offset) {
+    function wrapAttributes(text, width, padding, initial_y_offset) {
       text.each(function () {
           let text = d3.select(this),
               words = text.text().split(/[\s,,]+/).reverse(),
@@ -129,24 +125,20 @@
     }
 
     function update(source) {
-      var treeData = treemap(root);
+      let treeData = treemap(root);
 
-      var nodes = treeData.descendants();
-      var links = treeData.descendants().slice(1);
+      let nodes = treeData.descendants();
+      let links = treeData.descendants().slice(1);
 
-      // Normalize for fixed-depth.
       nodes.forEach(function (d) {
         d.y = d.depth * 120;
       });
 
-      // ****************** Nodes section ***************************
 
-      // Update the nodes...
-      var node = svg.selectAll("g.node").data(nodes, function (d) {
+      let node = svg_for_tree.selectAll("g.node_tv").data(nodes, function (d) {
         return d.id || (d.id = ++i);
       });
 
-      // Toggle children on click.
       function click(d) {
         if (d.children) {
           d._children = d.children;
@@ -155,15 +147,13 @@
           d.children = d._children;
           d._children = null;
         }
-        console.log(d)
         update(d);
       }
 
-      // Enter any new nodes at the parent's previous position.
-      var nodeEnter = node
+      let nodeEnter = node
         .enter()
         .append("g")
-        .attr("class", "node")
+        .attr("class", "node_tv")
         .attr("transform", function (d) {
           return "translate(" + source.y0 + "," + source.x0 + ")";
         })
@@ -180,7 +170,7 @@
       // Add Circle for the nodes
       nodeEnter
         .append("circle")
-        .attr("class", "node")
+        .attr("class", "node_tv")
         .attr("r", 1e-6)
         .style("fill", function (d) {
           return d._children ? "lightsteelblue" : "#fff";
@@ -204,10 +194,9 @@
         .attr('fill','white')
         .text(function (d) {
           return `name: Node_${d.data.name} attributes: ${Object.keys(d.data.atributes)}`;
-        }).call(wrap, 110, 1, 2.5);
+        }).call(wrapAttributes, 110, 1, 2.5);
 
-      // UPDATE
-      var nodeUpdate = nodeEnter.merge(node);
+      let nodeUpdate = nodeEnter.merge(node);
 
       // Transition to the proper position for the node
       nodeUpdate
@@ -219,7 +208,7 @@
 
       // Update the node attributes and style
       nodeUpdate
-        .select("circle.node")
+        .select("circle.node_tv")
         .attr("r", 10)
         .style("fill", function (d) {
           return d._children ? "lightsteelblue" : "#fff";
@@ -227,7 +216,7 @@
         .attr("cursor", "pointer");
 
       // Remove any exiting nodes
-      var nodeExit = node
+      let nodeExit = node
         .exit()
         .transition()
         .duration(duration)
@@ -235,7 +224,6 @@
           return "translate(" + source.y + "," + source.x + ")";
         })
         .remove();
-        console.log(nodeExit)
 
       // On exit reduce the node circles size to 0
       nodeExit.select("circle").attr("r", 1e-6);
@@ -246,22 +234,22 @@
       // ****************** links section ***************************
 
       // Update the links...
-      var link = svg.selectAll("path.link").data(links, function (d) {
+      let link = svg_for_tree.selectAll("path.link_tv").data(links, function (d) {
         return d.id;
       });
 
       // Enter any new links at the parent's previous position.
-      var linkEnter = link
+      let linkEnter = link
         .enter()
         .insert("path", "g")
-        .attr("class", "link")
+        .attr("class", "link_tv")
         .attr("d", function (d) {
-          var o = { x: source.x0, y: source.y0 };
+          let o = { x: source.x0, y: source.y0 };
           return diagonal(o, o);
         });
 
       // UPDATE
-      var linkUpdate = linkEnter.merge(link);
+      let linkUpdate = linkEnter.merge(link);
 
       // Transition back to the parent element position
       linkUpdate
@@ -272,12 +260,12 @@
         });
 
       // Remove any exiting links
-      var linkExit = link
+      let linkExit = link
         .exit()
         .transition()
         .duration(duration)
         .attr("d", function (d) {
-          var o = { x: source.x, y: source.y };
+          let o = { x: source.x, y: source.y };
           return diagonal(o, o);
         })
         .remove();
@@ -300,4 +288,3 @@
 
     }
 </script>
-{% endblock %}

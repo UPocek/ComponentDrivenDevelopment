@@ -1,94 +1,100 @@
 {% extends "core/base.html" %} {% block title %}Tim02 - sokic{% endblock %}
 {%block body %}
 
-<div class="dropdown_container">
-  <div class="dropdown" id="providers_dropdown">
-    <div class="dropdown-trigger">
-      <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-        <span>Select providers</span>
-        <span class="icon is-small">
-          <!--fontawesome required for the icon-->
-          <i class="fa fa-angle-down" aria-hidden="true"></i>
-        </span>
-      </button>
-    </div>
-    <div class="dropdown-menu" id="dropdown-providers-menu" role="menu">
-      <div class="dropdown-content">
-        {% for provider in providers %}
-        <a href="/{{provider.identifier}}" class="dropdown-item">
-          {{provider.name}}
-        </a>
-        {% endfor %}
+<div id="main-box">
+
+  <div class="dropdown_container">
+    <div class="dropdown" id="providers_dropdown">
+      <div class="dropdown-trigger">
+        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span>Select providers</span>
+          <span class="icon is-small">
+            <!--fontawesome required for the icon-->
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-providers-menu" role="menu">
+        <div class="dropdown-content">
+          {% for provider in providers %}
+          <a href="/{{provider.identifier}}" class="dropdown-item">
+            {{provider.name}}
+          </a>
+          {% endfor %}
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="dropdown" id="dropdown-visualizators">
-    <div class="dropdown-trigger">
-      <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-        <span>Select visualizators</span>
-        <span class="icon is-small">
-          <!--fontawesome required for the icon-->
-          <i class="fa fa-angle-down" aria-hidden="true"></i>
-        </span>
-      </button>
-    </div>
-    <div class="dropdown-menu" id="dropdown-visualizators-menu" role="menu">
-      <div class="dropdown-content">
-        {% for visualizator in visualizators %}
-        <a
-          type="submit"
-          href="/load_visualizator/{{visualizator.name}}"
-          class="dropdown-item"
-          id="{{visualizator.name}}"
-        >
-          {{visualizator.name}}
-        </a>
-        {% endfor %}
+  
+    <div class="dropdown" id="dropdown-visualizators">
+      <div class="dropdown-trigger">
+        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span>Select visualizators</span>
+          <span class="icon is-small">
+            <!--fontawesome required for the icon-->
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-visualizators-menu" role="menu">
+        <div class="dropdown-content">
+          {% for visualizator in visualizators %}
+          <a
+            type="submit"
+            href="/load_visualizator/{{visualizator.name}}"
+            class="dropdown-item"
+            id="{{visualizator.name}}"
+          >
+            {{visualizator.name}}
+          </a>
+          {% endfor %}
+        </div>
       </div>
     </div>
+  
+    <div>
+      <select class="input_filed" name="graph_list" id="graph_list">
+        {% for graph in all_graphs_from_db %}
+        {% if graph.name != 'sub' %}
+        <option {% if selected_graph != None and selected_graph.name == graph.name %} selected {% endif %} value="{{graph.name}}">{{graph.name}}</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+  
+    <div class="separator"></div>
+  
+    <div class="search">
+      <input id="search_input" class="input_filed" type="text" />
+    </div>
+  
+    <div class="separator"></div>
+  
+    <div class="filter">
+      <select class="input_filed" name="attribute" id="attribute">
+        {% for a in all_attributes %}
+        <option value="{{a}}">{{a}}</option>
+        {% endfor %}
+      </select>
+      <select class="input_filed" name="operator" id="operator">
+        {% for o in all_operators %}
+        <option value="{{o}}">{{o}}</option>
+        {% endfor %}
+      </select>
+      <input id="filter_value" class="input_filed" type="text" />
+    </div>
+  
+    <div class="separator"></div>
+  
+    <div class="submit_filters">
+      <a id="apply_filter_and_search">
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+      </a>
+    </div>
   </div>
 
-  <div>
-    <select class="input_filed" name="graph_list" id="graph_list">
-      {% for graph in all_graphs_from_db %}
-      {% if graph.name != 'sub' %}
-      <option {% if selected_graph != None and selected_graph.name == graph.name %} selected {% endif %} value="{{graph.name}}">{{graph.name}}</option>
-      {% endif %}
-      {% endfor %}
-    </select>
-  </div>
-
-  <div class="separator"></div>
-
-  <div class="search">
-    <input id="search_input" class="input_filed" type="text" />
-  </div>
-
-  <div class="separator"></div>
-
-  <div class="filter">
-    <select class="input_filed" name="attribute" id="attribute">
-      {% for a in all_attributes %}
-      <option value="{{a}}">{{a}}</option>
-      {% endfor %}
-    </select>
-    <select class="input_filed" name="operator" id="operator">
-      {% for o in all_operators %}
-      <option value="{{o}}">{{o}}</option>
-      {% endfor %}
-    </select>
-    <input id="filter_value" class="input_filed" type="text" />
-  </div>
-
-  <div class="separator"></div>
-
-  <div class="submit_filters">
-    <a id="apply_filter_and_search">
-      <i class="fa fa-angle-right" aria-hidden="true"></i>
-    </a>
-  </div>
 </div>
+
+
 <div class="filters_applied">
   {% for search_query in all_search_queries %}
   <div class="query_card">
@@ -106,7 +112,15 @@
   </div>
   {% endfor %}
 </div>
-{% block tree_view %}{% endblock %} {% autoescape off %}
+
+<div class="tree_view">
+
+  {% include "core/tree_view.html" %}
+
+</div>
+
+
+{% autoescape off %}
 <div id="visualization-container">{{content}}</div>
 {% endautoescape%}
 

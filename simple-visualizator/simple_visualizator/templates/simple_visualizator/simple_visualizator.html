@@ -10,7 +10,7 @@
     stroke-width: 3px;
   }
 
-  svg {
+  #simp_vis_svg {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -22,101 +22,100 @@
     alert("ID: " + el.id + "\n" + el.getAttribute("desc"));
   }
 </script>
-<svg width="100%" height="100%">
-  <g class="links"></g>
-  <g class="nodes"></g>
+<svg id="simp_vis_svg" width="100%" height="100%">
+  <g class="links_sv"></g>
+  <g class="nodes_sv"></g>
 </svg>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
-     var nodes = {{nodes|safe}}
+    let nodes_sv = {{nodes|safe}}
 
-     var links = {{edges|safe}}
-     console.log(nodes)
-     const svg = d3.select("svg");
+    let links_sv = {{edges|safe}}
 
-     var width = window.screen.width, height = window.screen.height
-     var simulation = d3.forceSimulation(nodes)
-         .force('charge', d3.forceManyBody().strength(-100))
-         .force('center', d3.forceCenter(width / 2, height / 2))
-         .force('link', d3.forceLink().links(links))
-         .on('tick', ticked);
+    const svg_sv = d3.select("#simp_vis_svg");
 
-     let zoom = d3.zoom()
-  .on('zoom', handleZoom);
+    let width_sv = window.screen.width, height_sv = window.screen.height
+    let simulation_sv = d3.forceSimulation(nodes_sv)
+        .force('charge', d3.forceManyBody().strength(-100))
+        .force('center', d3.forceCenter(width_sv / 2, height_sv / 2))
+        .force('link', d3.forceLink().links(links_sv))
+        .on('tick', ticked);
 
-     function handleZoom(e) {
-         d3.selectAll('svg circle,svg line')
-             .attr('transform', e.transform);
-     }
+    let zoom_sv = d3.zoom().on('zoom', handleZoom);
 
-     function initZoom() {
-         d3.select('svg')
-             .call(zoom);
-     }
-     function updateLinks() {
-         var u = d3.select('.links')
-             .selectAll('line')
-             .data(links)
-             .join('line')
-             .attr('x1', function(d) {
-                 return d.source.x
-             })
-             .attr('y1', function(d) {
-                 return d.source.y
-             })
-             .attr('x2', function(d) {
-                 return d.target.x
-             })
-             .attr('y2', function(d) {
-                 return d.target.y
-             });
-     }
+    function handleZoom(e) {
+        d3.selectAll('#simp_vis_svg circle,#simp_vis_svg line')
+            .attr('transform', e.transform);
+    }
 
-     function updateNodes() {
-         u = d3.select('.nodes')
-             .selectAll('circle')
-             .data(nodes)
-             .join('circle')
-             .attr('r', 9)
-             .attr('id', function(d){return d.id;})
-             .attr('desc', function(d){return Object.values(d.atributes).join("\n")})
-             .attr('cx', function(d) {
-                 return d.x
-             })
-             .attr('cy', function(d) {
-                 return d.y
-             }).on('click',function(){nodeClick(this)}).call(drag(simulation));;
-     }
+    function initZoom() {
+        d3.select('#simp_vis_svg')
+            .call(zoom_sv);
+    }
+    function updateLinks() {
+        let u = d3.select('.links_sv')
+            .selectAll('line')
+            .data(links_sv)
+            .join('line')
+            .attr('x1', function(d) {
+                return d.source.x
+            })
+            .attr('y1', function(d) {
+                return d.source.y
+            })
+            .attr('x2', function(d) {
+                return d.target.x
+            })
+            .attr('y2', function(d) {
+                return d.target.y
+            });
+    }
 
-     function ticked() {
-         updateLinks()
-         updateNodes()
-     }
+    function updateNodes() {
+        let u = d3.select('.nodes_sv')
+            .selectAll('circle')
+            .data(nodes_sv)
+            .join('circle')
+            .attr('r', 9)
+            .attr('id', function(d){return d.id;})
+            .attr('desc', function(d){return Object.values(d.atributes).join("\n")})
+            .attr('cx', function(d) {
+                return d.x
+            })
+            .attr('cy', function(d) {
+                return d.y
+            }).on('click',function(){nodeClick(this)}).call(drag(simulation_sv));;
+    }
 
-      function drag(simulation) {
-     function dragstarted(event) {
-       if (!event.active) simulation.alphaTarget(0.3).restart();
-       event.subject.fx = event.subject.x;
-       event.subject.fy = event.subject.y;
-     }
+    function ticked() {
+        updateLinks()
+        updateNodes()
+    }
 
-     function dragged(event) {
-       event.subject.fx = event.x;
-       event.subject.fy = event.y;
-     }
+     function drag(simulation_sv) {
+    function dragstarted(event) {
+      if (!event.active) simulation_sv.alphaTarget(0.3).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+    }
 
-     function dragended(event) {
-       if (!event.active) simulation.alphaTarget(0);
-       event.subject.fx = null;
-       event.subject.fy = null;
-     }
+    function dragged(event) {
+      event.subject.fx = event.x;
+      event.subject.fy = event.y;
+    }
 
-     return d3.drag()
-       .on("start", dragstarted)
-       .on("drag", dragged)
-       .on("end", dragended);
-   }
+    function dragended(event) {
+      if (!event.active) simulation_sv.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+    }
 
-   initZoom()
+    return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+  }
+
+  initZoom()
 </script>

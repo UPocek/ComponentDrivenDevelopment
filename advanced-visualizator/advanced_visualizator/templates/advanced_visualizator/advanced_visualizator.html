@@ -9,7 +9,7 @@
     stroke-width: 3px;
   }
 
-  svg {
+  #av_svg {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -24,42 +24,50 @@
     alert(output);
   }
 </script>
-<svg width="100%" height="100%">
+<svg id="av_svg" width="100%" height="100%">
   <g class="links"></g>
   <g class="nodes"></g>
 </svg>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
-    var nodes = {{nodes|safe}}
+    var nodes_for_av = {{nodes|safe}}
 
-    var links = {{edges|safe}}
+    var links_for_av = {{edges|safe}}
 
-    var width = window.screen.width, height = window.screen.height
-    var simulation = d3.forceSimulation(nodes)
+    var width_for_av = window.screen.width, height = window.screen.height
+    var simulation_for_av = d3.forceSimulation(nodes_for_av)
         .force('charge', d3.forceManyBody().strength(-10))
-        .force('center', d3.forceCenter(width / 3, height / 3))
-        .force('link', d3.forceLink().links(links).distance(200))
+        .force('center', d3.forceCenter(width_for_av / 3, height / 3))
+        .force('link', d3.forceLink().links(links_for_av).distance(250))
         .on('tick', ticked);
 
-    let zoom = d3.zoom().on('zoom', handleZoom);
+    let zoom_for_av = d3.zoom().on('zoom', handleZoom);
 
-    const svg = d3.select("svg");
-    const offsetTransform = d3.zoomIdentity.translate(-width/2, -height/2);
-    svg.attr("transform", offsetTransform);
+    const svg_for_av = d3.select("#av_svg");
+    const offsetTransformForAv = d3.zoomIdentity.translate(-width_for_av/2.5, -height/3);
+    svg_for_av.attr("transform", offsetTransformForAv);
+
+    var first_av = true;
 
     function handleZoom(e) {
-      //d3.selectAll('svg').attr('transform', e.transform);
+      if(first_av){
+        e.transform.x += offsetTransformForAv.x;
+        e.transform.y += offsetTransformForAv.y;
+        first_av = false;
+      }
+
+      d3.selectAll('#av_svg').attr('transform', e.transform);
     }
 
     function initZoom() {
-      d3.select('svg').call(zoom);
+      d3.select('#av_svg').call(zoom_for_av);
     }
 
     function insertLinks(){
       d3.select('.links')
       .selectAll('line.line_av')
-      .data(links)
+      .data(links_for_av)
       .enter().append('line')
       .attr('class', 'line_av');
     }
@@ -84,13 +92,15 @@
     function insertNodes(){
       d3.select('.nodes')
       .selectAll('g.node_av')
-      .data(nodes)
+      .data(nodes_for_av)
       .enter().append('g')
       .attr('class', 'node_av')
       .attr('id', function(d){return d.id;})
       .attr('desc', function(d){return Object.values(d.atributes).join("\n")})
       .attr('transform', function(d){return `scale(${1}) translate(${d.x},${d.y})`})
-      .on('click',function(){nodeClick(this)}).call(drag(simulation));
+      .on('click',function(){nodeClick(this)}).call(drag(simulation_for_av));
+
+      d3.selectAll('g.node_av').each(function(d){advancedVizualization(d);});
     }
 
     function updateNodes() {
@@ -104,9 +114,9 @@
         updateNodes()
     }
 
-     function drag(simulation) {
+    function drag(simulation_for_av) {
     function dragstarted(event) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
+      if (!event.active) simulation_for_av.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     }
@@ -117,12 +127,16 @@
     }
 
     function dragended(event) {
-      if (!event.active) simulation.alphaTarget(0);
+      if (!event.active) simulation_for_av.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
     }
 
-    d3.selectAll('g.node_av').each(function(d){advancedVizualization(d);});
+    return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+  }
 
     function advancedVizualization(d){
 
@@ -237,12 +251,6 @@
       }
       return maxSizeRequired > maxWidth ? maxWidth : maxSizeRequired;
     }
-
-    return d3.drag()
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended);
-  }
 
   initZoom()
   insertLinks()
