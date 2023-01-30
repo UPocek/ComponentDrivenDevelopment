@@ -1,0 +1,290 @@
+<style>
+  .node_tv circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 3px;
+  }
+
+  .node_tv text {
+    font: 12px sans-serif;
+  }
+
+  .link_tv {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+  }
+</style>
+<svg id="tree_view_svg"></svg>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+    let nodeForTree = {{ tree_view|safe }};
+
+    let rootNode = nodeForTree[Object.keys(nodeForTree)[0]];
+    let treeData = {
+      name: rootNode['id'],
+      children: [],
+      atributes:rootNode['atributes']
+    };
+
+    function getNeigbours(parent){
+      let new_nodes = nodeForTree[parent.data.name]['neighbours']
+      if(new_nodes != []){
+      new_nodes.forEach(function(d){
+          let newNodeObj = {
+              name: d.id,
+              atributes: d.atributes,
+              children: [],
+            };
+            //Creates new Node
+            let newNode = d3.hierarchy(newNodeObj);
+            newNode.depth = parent.depth + 1;
+            newNode.height = parent.height - 1;
+            newNode.parent = parent;
+            addNewNode(parent, newNode);
+      })}
+    }
+
+    let margin = { top: 20, right: 20, bottom: 80, left: 30 },
+      width = 13000
+      height = window.screen.height - 380
+
+    let svg_for_tree = d3
+      .select("#tree_view_svg")
+      .attr("width", width + margin.right + margin.left)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    let i = 0,
+      duration = 750,
+      root;
+
+    let treemap = d3.tree().size([height, width]);
+
+    root = d3.hierarchy(treeData, function (d) {
+      return d.children;
+    });
+    root.x0 = height / 2;
+    root.y0 = 0;
+
+    // Collapse after the second level
+  //   root.children.forEach(collapse);
+  //   collapse(root);
+    update(root);
+
+    function collapse(d) {
+      if (d.children) {
+        d._children = d.children;
+        d._children.forEach(collapse);
+        d.children = null;
+      }
+    }
+
+    function addNewNode(d, item) {
+        if (d._children) {
+          d._children.push(item);
+        } else if(d.children){
+          d.children.push(item);
+        }else{
+            d._children = [item]
+        }
+    }
+
+    function wrapAttributes(text, width, padding, initial_y_offset) {
+      text.each(function () {
+          let text = d3.select(this),
+              words = text.text().split(/[\s,,]+/).reverse(),
+              word,
+              line = [],
+              lineNumber = 0,
+              lineHeight = 1.1,
+              x = text.attr("x"),
+              y = text.attr("y"),
+              dy = 0,
+              tspan = text.text(null)
+                          .append("tspan")
+                          .attr("x", x)
+                          .attr("y", y)
+                          .attr("dy", initial_y_offset + dy + "em");
+          while (word = words.pop()) {
+              line.push(word);
+              tspan.text(line.join(" "));
+              if (tspan.node().getComputedTextLength() > width - padding) {
+                  line.pop();
+                  tspan.text(line.join(" "));
+                  line = [word];
+                  tspan = text.append("tspan")
+                              .attr("x", x)
+                              .attr("y", y)
+                              .attr("dy", lineHeight + dy + "em")
+                              .text(word);
+            }
+          }
+      });
+    }
+
+    function update(source) {
+      let treeData = treemap(root);
+
+      let nodes = treeData.descendants();
+      let links = treeData.descendants().slice(1);
+
+      nodes.forEach(function (d) {
+        d.y = d.depth * 120;
+      });
+
+
+      let node = svg_for_tree.selectAll("g.node_tv").data(nodes, function (d) {
+        return d.id || (d.id = ++i);
+      });
+
+      function click(d) {
+        if (d.children) {
+          d._children = d.children;
+          d.children = null;
+        } else {
+          d.children = d._children;
+          d._children = null;
+        }
+        update(d);
+      }
+
+      let nodeEnter = node
+        .enter()
+        .append("g")
+        .attr("class", "node_tv")
+        .attr("transform", function (d) {
+          return "translate(" + source.y0 + "," + source.x0 + ")";
+        })
+        .on("click", function (event, d) {
+          if (d.loaded === undefined) {
+            getNeigbours(d)
+            d.loaded = true;
+            click(d);
+          } else {
+            click(d);
+          }
+        });
+
+      // Add Circle for the nodes
+      nodeEnter
+        .append("circle")
+        .attr("class", "node_tv")
+        .attr("r", 1e-6)
+        .style("fill", function (d) {
+          return d._children ? "lightsteelblue" : "#fff";
+        });
+
+        nodeEnter
+        .append("rect")
+        .attr('x',-5)
+        .attr('y',15)
+        .attr('width',120)
+        .attr('height',70)
+        .attr('fill','rgba(21, 137, 224, 0.8)');
+      // Add labels for the nodes
+      nodeEnter
+        .append("text")
+        .attr("dy", "2.5em")
+        .attr("x", function (d) {
+          return d.children || d._children ? -1 : 1;
+        })
+        .attr("text-anchor", "start")
+        .attr('fill','white')
+        .text(function (d) {
+          return `name: Node_${d.data.name} attributes: ${Object.keys(d.data.atributes)}`;
+        }).call(wrapAttributes, 110, 1, 2.5);
+
+      let nodeUpdate = nodeEnter.merge(node);
+
+      // Transition to the proper position for the node
+      nodeUpdate
+        .transition()
+        .duration(duration)
+        .attr("transform", function (d) {
+          return "translate(" + d.y + "," + d.x + ")";
+        });
+
+      // Update the node attributes and style
+      nodeUpdate
+        .select("circle.node_tv")
+        .attr("r", 10)
+        .style("fill", function (d) {
+          return d._children ? "lightsteelblue" : "#fff";
+        })
+        .attr("cursor", "pointer");
+
+      // Remove any exiting nodes
+      let nodeExit = node
+        .exit()
+        .transition()
+        .duration(duration)
+        .attr("transform", function (d) {
+          return "translate(" + source.y + "," + source.x + ")";
+        })
+        .remove();
+
+      // On exit reduce the node circles size to 0
+      nodeExit.select("circle").attr("r", 1e-6);
+
+      // On exit reduce the opacity of text labels
+      nodeExit.select("text").style("fill-opacity", 1e-6);
+
+      // ****************** links section ***************************
+
+      // Update the links...
+      let link = svg_for_tree.selectAll("path.link_tv").data(links, function (d) {
+        return d.id;
+      });
+
+      // Enter any new links at the parent's previous position.
+      let linkEnter = link
+        .enter()
+        .insert("path", "g")
+        .attr("class", "link_tv")
+        .attr("d", function (d) {
+          let o = { x: source.x0, y: source.y0 };
+          return diagonal(o, o);
+        });
+
+      // UPDATE
+      let linkUpdate = linkEnter.merge(link);
+
+      // Transition back to the parent element position
+      linkUpdate
+        .transition()
+        .duration(duration)
+        .attr("d", function (d) {
+          return diagonal(d, d.parent);
+        });
+
+      // Remove any exiting links
+      let linkExit = link
+        .exit()
+        .transition()
+        .duration(duration)
+        .attr("d", function (d) {
+          let o = { x: source.x, y: source.y };
+          return diagonal(o, o);
+        })
+        .remove();
+
+      // Store the old positions for transition.
+      nodes.forEach(function (d) {
+        d.x0 = d.x;
+        d.y0 = d.y;
+      });
+
+      // Creates a curved (diagonal) path from parent to the child nodes
+      function diagonal(s, d) {
+        path = `M ${s.y} ${s.x}
+                  C ${(s.y + d.y) / 2} ${s.x},
+                    ${(s.y + d.y) / 2} ${d.x},
+                    ${d.y} ${d.x}`;
+
+        return path;
+      }
+
+    }
+</script>

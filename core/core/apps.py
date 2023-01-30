@@ -94,7 +94,9 @@ class CoreConfig(AppConfig):
                 node.delete()
     
     def node_fulfills_filter_query(self, node, query):
-        node_value = node.atributes[query['attribute']]
+        node_value = node.atributes.get(query['attribute'])
+        if node_value is None:
+            return False
         query_value = query['value']
         if query['operator'] == '==':
             return self.get_truth(node_value , operator.eq, query_value)
@@ -153,6 +155,17 @@ class CoreConfig(AppConfig):
         return ['==', '>', '>=', '<', '<=', '!=']
             
 
+    def make_tree_view_node_dict(self):
+        selected_graph = self.get_graph_to_use()
+        if selected_graph is None:
+            return {}
+        nodes = selected_graph.get_all_nodes()
+        nodes_dict = {str(entry['id']):entry for entry in nodes.values()}
+        for node in nodes:
+            nodes_dict[str(node.id)]['neighbours'] = []
+            for neighbour in node.get_all_neighbours().values():
+                nodes_dict[str(node.id)]['neighbours'].append(neighbour)
+        return nodes_dict
 
 def load_plugins(group):
     plugins = []

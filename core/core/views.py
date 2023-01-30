@@ -15,11 +15,16 @@ context = {
 }
 
 def index(request):
+    if apps.get_app_config("core").original_graph is None and len(Graph.objects.all()) > 0:
+        apps.get_app_config("core").original_graph = Graph.objects.all()[0]
+    if apps.get_app_config("core").current_visualizator is None and len(apps.get_app_config("core").visualizator_plugins) > 0:
+        apps.get_app_config("core").current_visualizator = apps.get_app_config("core").visualizator_plugins[0]
     context['all_graphs_from_db'] = Graph.objects.all()
     context['all_attributes'] = apps.get_app_config("core").get_all_attributes_of_selected_graph()    
     context['all_operators'] = apps.get_app_config("core").get_supported_operators()
     context['all_search_queries'] = apps.get_app_config("core").applied_searches
     context['all_filter_queries'] = apps.get_app_config("core").applied_filters
+    context['tree_view'] = apps.get_app_config("core").make_tree_view_node_dict()
     context['selected_graph'] = apps.get_app_config("core").get_graph_to_use()
     return render(request, 'core/index.html', context=context)
 
@@ -30,7 +35,7 @@ def choose_graph(request, graph_name):
     apps.get_app_config("core").sub_graph = None
     apps.get_app_config("core").applied_searches.clear()
     apps.get_app_config("core").applied_filters.clear()
-    return load_visualizator(request, apps.get_app_config("core").current_visualizator)
+    return HttpResponseRedirect(reverse("index"))
 
 @csrf_exempt
 def filter_graph(request):
@@ -48,7 +53,7 @@ def filter_graph(request):
             new_graph_h = Graph(name = 'sub')
             new_graph_h.save()
             apps.get_app_config("core").apply(new_graph_h)
-        return load_visualizator(request, apps.get_app_config("core").current_visualizator)
+        return HttpResponseRedirect(reverse("index"))
     
 def delete_search_query(request, query_id):
     apps.get_app_config("core").applied_searches.pop(query_id)
@@ -56,7 +61,7 @@ def delete_search_query(request, query_id):
     new_graph = Graph(name = 'sub')
     new_graph.save()
     apps.get_app_config("core").apply(new_graph)
-    return load_visualizator(request, apps.get_app_config("core").current_visualizator)
+    return HttpResponseRedirect(reverse("index"))
 
 def delete_filter_query(request, query_id):
     apps.get_app_config("core").applied_filters.pop(query_id)
@@ -64,7 +69,7 @@ def delete_filter_query(request, query_id):
     new_graph = Graph(name = 'sub')
     new_graph.save()
     apps.get_app_config("core").apply(new_graph)
-    return load_visualizator(request, apps.get_app_config("core").current_visualizator)
+    return HttpResponseRedirect(reverse("index"))
         
 
 def load_visualizator(request,visualizator_name):

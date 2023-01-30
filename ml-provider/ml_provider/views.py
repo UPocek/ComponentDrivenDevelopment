@@ -18,7 +18,7 @@ def neural_network_parsing(request):
             provider_plugins = apps.get_app_config("core").provider_plugins
             for plugin in provider_plugins:
                 if plugin.identifier() == "ml_provider":
-                    plugin.load(graph_name="Tasa")
+                    plugin.load(graph_name=request.POST['title'])
                     break
             else:
                 print("Neural network provider is not installed")
