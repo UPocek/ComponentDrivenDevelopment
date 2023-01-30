@@ -12,10 +12,7 @@ class AdvencedVisualizator(Visualizator):
     def name(self):
         return "Advanced visualizator"
 
-    def show(self):
-        all_graphs = Graph.objects.all()
-        number_of_graphs = len(all_graphs)
-        g = all_graphs[number_of_graphs-1]
+    def show(self, g):
         nodes = g.get_all_nodes()
         edges = []
         for node in nodes:
