@@ -1,7 +1,7 @@
 {% extends "core/base.html" %} {% block title %}Tim02 - sokic{% endblock %}
 {%block body %}
 
-<div>
+<div class="dropdown_container">
   <div class="dropdown" id="providers_dropdown">
     <div class="dropdown-trigger">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -48,6 +48,63 @@
       </div>
     </div>
   </div>
+
+  <div>
+    <select class="input_filed" name="graph_list" id="graph_list">
+      {% for graph in all_graphs_from_db %}
+      {% if graph.name != 'sub' %}
+      <option {% if selected_graph != None and selected_graph.name == graph.name %} selected {% endif %} value="{{graph.name}}">{{graph.name}}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="separator"></div>
+
+  <div class="search">
+    <input id="search_input" class="input_filed" type="text" />
+  </div>
+
+  <div class="separator"></div>
+
+  <div class="filter">
+    <select class="input_filed" name="attribute" id="attribute">
+      {% for a in all_attributes %}
+      <option value="{{a}}">{{a}}</option>
+      {% endfor %}
+    </select>
+    <select class="input_filed" name="operator" id="operator">
+      {% for o in all_operators %}
+      <option value="{{o}}">{{o}}</option>
+      {% endfor %}
+    </select>
+    <input id="filter_value" class="input_filed" type="text" />
+  </div>
+
+  <div class="separator"></div>
+
+  <div class="submit_filters">
+    <a id="apply_filter_and_search">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </a>
+  </div>
+</div>
+<div class="filters_applied">
+  {% for search_query in all_search_queries %}
+  <div class="query_card">
+    <div class="query_text">{{search_query}}</div>
+    <div class="remove_search_query" id="{{forloop.counter0}}">
+        <i class="fa fa-x" aria-hidden="true"></i>
+    </div>
+  </div>
+  {% endfor %} {% for filter_query in all_filter_queries %}
+  <div class="query_card">
+    <div class="query_text">{{filter_query.attribute}} {{filter_query.operator}} {{filter_query.value}}</div>
+    <div class="remove_filter_query" id="{{forloop.counter0}}">
+        <i class="fa fa-x" aria-hidden="true"></i>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% block tree_view %}{% endblock %} {% autoescape off %}
 <div id="visualization-container">{{content}}</div>

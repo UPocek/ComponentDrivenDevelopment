@@ -11,11 +11,8 @@ class SimpleVisualizator():
     def name(self):
         return "Simple visualizator"
 
-    def show(self):
-        g = Graph.objects.all()
-        size = len(Graph.objects.all())
-        testGraph = g[size-1]
-        nodes = testGraph.get_all_nodes()
+    def show(self, g):
+        nodes = g.get_all_nodes()
         edges = []
         for node in nodes:
             for neighbour in node.get_all_neighbours():
