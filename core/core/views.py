@@ -15,7 +15,10 @@ context = {
 }
 
 def index(request):
-    return render(request, 'core/index.html', context=context)
+    g = Graph.objects.all()
+    size = len(Graph.objects.all())
+    context['tree_view'] = apps.get_app_config("core").make_tree_view_node_dict(g, size)
+    return render(request, 'core/tree_view.html', context=context)
 
 
 def load_visualizator(request,visualizator_name):
