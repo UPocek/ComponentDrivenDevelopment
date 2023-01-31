@@ -14,7 +14,7 @@ def get_root(graph_name, xml_doc):
     global _graph
     _graph = Graph(name=graph_name)
     _graph.save()
-    tree = ET.parse('../xml_provider/xml_provider/data/' + xml_doc)
+    tree = ET.parse('../xml_provider/xml_provider/uploaded_data/' + xml_doc)
     root = tree.getroot()
     node = Node(atributes={"title": root.tag})
     _graph.add_node(node)
