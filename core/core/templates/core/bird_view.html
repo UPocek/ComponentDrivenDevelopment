@@ -1,0 +1,42 @@
+<style>
+    .width100 {
+        width: 100%;
+    }
+</style>
+<svg id="bird_view_svg" class="width100" ></svg>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+    let nodeLength = {{ bird_view|safe }}
+    let recentlyLoaded = false;
+    window.onload = function(){
+        const targetNode = d3.select(".bird").node();
+        observer.observe(targetNode, config);
+    }
+     function changeBirdView(e){
+        recentlyLoaded = true;
+        let main = d3.select(".bird").html();
+        d3.select("#bird_view_svg").html(main)
+
+
+        let scaleWidth = 300 / d3.select(".bird").select("g").node().getBBox().width;
+        let scaleHeight = 150 /  d3.select(".bird").select("g").node().getBBox().height;
+        scale = Math.min(scaleHeight,scaleWidth) / 1.5;
+
+
+        let x = d3.select("#bird_view_svg").select("g").node().getBBox().x;
+        let y = d3.select("#bird_view_svg").select("g").node().getBBox().y;
+
+        let t = [-x*scale + 50, -y*scale + 50];
+
+        d3.select("#bird_view_svg").select("g").attr("transform", "translate ("+t+") scale("+ scale +")");
+        setTimeout(function() {recentlyLoaded = false;},nodeLength);
+    };
+
+
+    const config = { attributes: true, childList: true, subtree: true};
+    const observer = new MutationObserver( function() {
+        if(!recentlyLoaded){
+            changeBirdView();
+        }
+    });
+</script>

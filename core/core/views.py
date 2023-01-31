@@ -25,6 +25,7 @@ def index(request):
     context['all_search_queries'] = apps.get_app_config("core").applied_searches
     context['all_filter_queries'] = apps.get_app_config("core").applied_filters
     context['tree_view'] = apps.get_app_config("core").make_tree_view_node_dict()
+    context['bird_view'] = apps.get_app_config("core").make_bird_view()
     context['selected_graph'] = apps.get_app_config("core").get_graph_to_use()
     return render(request, 'core/index.html', context=context)
 
