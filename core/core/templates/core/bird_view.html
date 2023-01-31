@@ -27,8 +27,9 @@
         let y = d3.select("#bird_view_svg").select("g").node().getBBox().y;
 
         let t = [-x*scale + 50, -y*scale + 50];
-
-        d3.select("#bird_view_svg").select("g").attr("transform", "translate ("+t+") scale("+ scale +")");
+        console.log(d3.select("#bird_view_svg").select("g"))
+        d3.select("#bird_view_svg").select("g.bird_links").attr("transform", "translate ("+t+") scale("+ scale +")");
+        d3.select("#bird_view_svg").select("g.bird_nodes").attr("transform", "translate ("+t+") scale("+ scale +")");
         setTimeout(function() {recentlyLoaded = false;},nodeLength);
     };
 
