@@ -120,9 +120,16 @@
 </div>
 
 
+
+
 {% autoescape off %}
 <div id="visualization-container">{{content}}</div>
 {% endautoescape%}
+
+
+<div class="bird_view" id="bird_view_div">
+  {% include "core/bird_view.html" %}
+</div>
 
 <script src="../../static/core/scripts/index.js"></script>
 {% endblock %}
