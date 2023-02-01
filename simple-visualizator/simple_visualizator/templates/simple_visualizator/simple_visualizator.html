@@ -1,12 +1,35 @@
 <style>
-  circle {
+  .baseCircle {
     cursor: pointer;
     fill: #1589e0;
   }
 
-  line {
+  .paleLine{
+    fill: #1b1b1b;
+    stroke: #fdd5d5;
+    stroke-width: 3px;
+  }
+
+  .paleCircle
+  {
+    cursor: pointer;
+    fill: #54a2de;
+  }
+
+  .hoveredCircle {
+    cursor: pointer;
+    fill: #015696;
+  }
+
+  .baseLine {
     fill: #1b1b1b;
     stroke: #fdb0b0;
+    stroke-width: 3px;
+  }
+
+  .hoveredLine{
+    fill: #1b1b1b;
+    stroke: #f54f4f;
     stroke-width: 3px;
   }
 
@@ -20,11 +43,72 @@
     left: 50%;
     transform: translate(-55%, -55%);
   }
+
+  #simp_vis_svg:focus{
+    outline:none !important;
+  }
 </style>
 <script>
-  function nodeClick(el) {
-    alert("ID: " + el.id + "\n" + el.getAttribute("desc"));
+   let selected_node_sv = null;
+
+   function hoverNode(node){
+       d3.select('.links_sv')
+               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+               .attr('class', 'hoveredLine')
+       d3.select(`.node_sv[id='${node.id}']`).selectAll('circle').attr('class', 'hoveredCircle')
+
+   }
+   function dropHover(node){
+     if(selected_node_sv == null) {
+       d3.select('.links_sv')
+               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+               .attr('class', 'baseLine')
+      d3.select(`.node_sv[id='${node.id}']`).selectAll('circle').attr('class','baseCircle')
+     }
+     else{
+        d3.select('.links_sv')
+               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+               .attr('class', 'paleLine')
+        d3.select(`.node_sv[id='${node.id}']`).selectAll('circle').attr('class','paleCircle')
+       d3.select('.links_sv')
+       .selectAll(`line[source='${selected_node_sv.id}'],line[target='${selected_node_sv.id}']`)
+       .attr('class','hoveredLine')
+       d3.select(`.node_sv[id='${selected_node_sv.id}']`).selectAll('circle').attr('class','hoveredCircle')
+     }
+     }
+  function nodeClick(node) {
+
+    if(selected_node_sv != null){
+      d3.select('.links_sv')
+       .selectAll(`line[source='${selected_node_sv.id}'],line[target='${selected_node_sv.id}']`)
+       .attr('class','paleLine')
+      d3.select(`.node_sv[id='${selected_node_sv.id}']`).selectAll('circle').attr('class','paleCircle')
+    }
+    d3.select('.links_sv')
+       .selectAll(`line`)
+       .attr('class','paleLine')
+      d3.select(`.nodes_sv`).selectAll('.node_sv').selectAll('circle').attr('class','paleCircle')
+      d3.selectAll('marker').attr('fill','#fdd5d5')
+
+    selected_node_sv = node
+     d3.selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+     .attr('class','hoveredLine')
+     d3.select(`.node_sv[id='${node.id}']`).selectAll('circle').attr('class','hoveredCircle')
+
   }
+  function nodeAlert(node){
+        alert("ID: " + node.id + "\n" + node.getAttribute("desc"));
+  }
+  function clearColors(){
+    d3.select('.links_sv')
+       .selectAll(`line`)
+       .attr('class','baseLine')
+      d3.select(`.nodes_sv`).selectAll('.node_sv').
+      selectAll('circle').attr('class','baseCircle')
+      d3.selectAll('marker').attr('fill','#fdb0b0')
+    selected_node_sv = null;
+  }
+
 </script>
 <svg id="simp_vis_svg" width="100%" height="100%">
   <g class="links_sv"></g>
@@ -39,13 +123,20 @@
 
     let links_sv = {{edges|safe}}
 
-    const svg_sv = d3.select("#simp_vis_svg");
+
+    const svg_sv = d3.select("#simp_vis_svg") .attr('tabindex', '0')
+  .attr('focusable', 'true').on('keydown',(event)=>{
+                  if(event.keyCode == 27){
+                    clearColors();
+                  }
+                });
 
     let width_sv = window.screen.width, height_sv = window.screen.height
     let simulation_sv = d3.forceSimulation(nodes_sv)
         .force('charge', d3.forceManyBody().strength(-100))
         .force('center', d3.forceCenter(width_sv / 2, height_sv / 2))
         .force('link', d3.forceLink().links(links_sv)).on('tick', ticked)
+
 
 
     let zoom_sv = d3.zoom().on('zoom', handleZoom);
@@ -60,10 +151,20 @@
             .call(zoom_sv);
     }
     function insertLinks(){
+      let arrow_append_counter_sv=0;
       let u = d3.select('.links_sv')
-            .selectAll('line')
-            .data(links_sv)
-            .join('line')
+              .selectAll('line')
+              .data(links_sv)
+              .join('line')
+              .attr('class','baseLine')
+              .attr('id',function(d){arrow_append_counter_sv++
+              return arrow_append_counter_sv})
+              .attr('source',function (d) {
+                return d.source.id
+              })
+              .attr('target',function (d) {
+                        return d.target.id
+                      })
     }
     function updateLinks() {
         let u = d3.select('.links_sv')
@@ -87,8 +188,14 @@
       let c = d3.select('.nodes_sv')
             .selectAll('g')
             .data(nodes_sv)
-            .enter().append('g').attr('class',"node_sv").attr('desc', function(d){return Object.values(d.atributes).join("\n")}).attr('id', function(d){return d.id;}).attr('transform', function(d){return `scale(${1}) translate(${d.x},${d.y})`})
-      .on('click',function(){nodeClick(this)}).call(drag(simulation_sv))
+            .enter().append('g').attr('class',"node_sv")
+              .attr('desc', function(d){return Object.values(d.atributes).join("\n")})
+              .attr('id', function(d){return d.id;})
+              .on('click',function(){nodeClick(this);nodeAlert(this)})
+              .attr('transform', function(d){return `scale(${1}) translate(${d.x},${d.y})`})
+              .on('mouseover', function(){hoverNode(this);})
+              .on('mouseout',function(){dropHover(this);})
+              .call(drag(simulation_sv))
 
 
       d3.selectAll('.node_sv').each(function(d){simpleVizualization(d)})
@@ -99,7 +206,7 @@
 
 
       d3.select(`g[id="${d.id}"]`)
-              .append('circle').attr('r', 9)
+              .append('circle').attr('r', 9).attr('class','baseCircle');
 
 
       d3.select(`g[id="${d.id}"]`)
