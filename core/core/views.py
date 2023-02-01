@@ -92,3 +92,8 @@ def delete_helper_graphs():
             for node in graph.get_all_nodes():
                 Node.objects.filter(pk=node.pk).delete()
             Graph.objects.filter(pk=graph.pk).delete()
+
+
+def select_treeview_node(request):
+
+    return

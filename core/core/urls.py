@@ -9,4 +9,5 @@ urlpatterns = [
     path('filter', views.filter_graph, name='filter_graph'),
     path('delete_search_query/<int:query_id>', views.delete_search_query, name='delete_search_query'),
     path('delete_filter_query/<int:query_id>', views.delete_filter_query, name='delete_filter_query'),
+    path('select_treeview_node', views.select_treeview_node)
 ]

@@ -8,20 +8,109 @@
     stroke: #fdb0b0;
     stroke-width: 3px;
   }
+  .base_node_av {
+    cursor: pointer;
+    fill: #1589e0;
+  }
 
+  .pale_line_av{
+    fill: #1b1b1b;
+    stroke: #fdd5d5 !important;
+    stroke-width: 3px;
+  }
+
+  .pale_node_av
+  {
+    cursor: pointer;
+    fill: #54a2de  !important;
+  }
+
+  .hovered_node_av {
+
+    cursor: pointer;
+    fill: #015696  !important;
+  }
+
+
+  .hovered_line_av{
+    fill: #1b1b1b;
+    stroke: #f54f4f  !important;
+    stroke-width: 3px;
+  }
   #av_svg {
     position: absolute;
     top: 50%;
     left: 50%;
   }
+
+    #av_svg:focus{
+    outline:none !important;
+  }
 </style>
 <script>
-  function nodeClick(clickedElement) {
+  function nodeAlert(clickedElement) {
     output = "";
     output += `ID: ${clickedElement.id}\n`;
     output += `POSITION: ${clickedElement.getAttribute("transform")}\n`;
     output += `DESCRIPTION: ${clickedElement.getAttribute("desc")}\n`;
     alert(output);
+  }
+     let selected_node_av = null;
+
+   function hoverNode(node){
+       d3.select('.links')
+               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+               .attr('class', 'line_av hovered_line_av')
+       d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class', 'node_av hovered_node_av')
+
+   }
+   function dropHover(node){
+     if(selected_node_av == null) {
+       d3.select('.links')
+               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+               .attr('class', 'line_av')
+      d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class','node_av')
+     }
+     else{
+        d3.select('.links')
+               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+               .attr('class', 'line_av pale_line_av')
+        d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class','node_av pale_node_av')
+       d3.select('.links')
+       .selectAll(`line[source='${selected_node_av.id}'],line[target='${selected_node_av.id}']`)
+       .attr('class','line_av hovered_line_av')
+       d3.select(`.node_av[id='${selected_node_av.id}']`).selectAll('rect').attr('class','node_av hovered_node_av')
+     }
+     }
+  function nodeClick(node) {
+
+    if(selected_node_av != null){
+      d3.select('.links')
+       .selectAll(`line[source='${selected_node_av.id}'],line[target='${selected_node_av.id}']`)
+       .attr('class','line_av pale_line_av')
+      d3.select(`.node_av[id='${selected_node_av.id}']`).selectAll('rect').attr('class','node_av pale_node_av')
+    }
+    d3.select('.links')
+       .selectAll(`line`)
+       .attr('class','line_av pale_line_av')
+      d3.select(`.nodes`).selectAll('.node_av').selectAll('rect').attr('class','node_av pale_node_av')
+      d3.selectAll('marker').attr('fill','#fdd5d5')
+
+    selected_node_av = node
+    d3.select('.links')
+     .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+     .attr('class','line_av hovered_line_av')
+     d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class','node_av hovered_node_av')
+  }
+
+  function clearColors(){
+    d3.select('.links')
+       .selectAll(`line`)
+       .attr('class','line_av')
+      d3.select(`.nodes`).selectAll('.node_av').
+      selectAll('rect').attr('class','node_av')
+      d3.selectAll('marker').attr('fill','#fdb0b0')
+    selected_node_av = null;
   }
 </script>
 <svg id="av_svg" width="100%" height="100%" class="bird">
@@ -44,11 +133,17 @@
 
     let zoom_for_av = d3.zoom().on('zoom', handleZoom);
 
-    const svg_for_av = d3.select("#av_svg");
+    const svg_for_av = d3.select("#av_svg") .attr('tabindex', '0')
+  .attr('focusable', 'true').on('keydown',(event)=>{
+                  if(event.keyCode == 27){
+                    clearColors();
+                  }
+                });;
     const offsetTransformForAv = d3.zoomIdentity.translate(-width_for_av/2.5, -height/3);
     svg_for_av.attr("transform", offsetTransformForAv);
 
     var first_av = true;
+
 
     function handleZoom(e) {
       if(first_av){
@@ -69,7 +164,12 @@
       .selectAll('line.line_av')
       .data(links_for_av)
       .enter().append('line')
-      .attr('class', 'line_av');
+      .attr('class', 'line_av').attr('source',function (d) {
+                return d.source.id
+              })
+              .attr('target',function (d) {
+                        return d.target.id
+                      })
     }
 
     function updateLinks() {
@@ -98,7 +198,9 @@
       .attr('id', function(d){return d.id;})
       .attr('desc', function(d){return Object.values(d.atributes).join("\n")})
       .attr('transform', function(d){return `scale(${1}) translate(${d.x},${d.y})`})
-      .on('click',function(){nodeClick(this)}).call(drag(simulation_for_av));
+      .call(drag(simulation_for_av))
+      .on('click',function(){nodeClick(this);nodeAlert(this)}).on('mouseover', function(){hoverNode(this);})
+      .on('mouseout',function(){dropHover(this);});
 
       d3.selectAll('g.node_av').each(function(d){advancedVizualization(d);});
     }
