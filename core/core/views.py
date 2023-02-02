@@ -11,7 +11,8 @@ visualizators = apps.get_app_config("core").visualizator_plugins
 providers = apps.get_app_config("core").provider_plugins
 context = {
 'visualizators': visualizators,
-'providers': providers
+'providers': providers,
+'treeview_selector_list':"undefined"
 }
 
 def index(request):
@@ -95,4 +96,9 @@ def delete_helper_graphs():
 
 def select_treeview_node(request):
 
-    return
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    content = body
+    data = content
+    context['treeview_selector_list'] = data
+    return HttpResponseRedirect(reverse('index'))
