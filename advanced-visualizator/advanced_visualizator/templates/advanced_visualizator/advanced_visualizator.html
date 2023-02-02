@@ -101,6 +101,8 @@
      .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
      .attr('class','line_av hovered_line_av')
      d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class','node_av hovered_node_av')
+        sendToCore(findNodeIds(selected_node_av.id));
+
   }
 
   function clearColors(){
@@ -112,6 +114,43 @@
       d3.selectAll('marker').attr('fill','#fdb0b0')
     selected_node_av = null;
   }
+  function findNodeIds(nodeId){
+     let iteration_node_id = nodeId;
+     let nodeList = [];
+     nodeList.push(Number.parseInt(nodeId));
+     while(true) {
+       let line_test = d3.selectAll(`line[target='${iteration_node_id}'`)
+       let lines_for_ids = line_test._groups[0]
+       console.log(lines_for_ids)
+       if(lines_for_ids.length!=0){
+         let line = lines_for_ids[0];
+         iteration_node_id = line.__data__.source.id
+         nodeList.push(iteration_node_id)
+
+       }
+       else{
+            return nodeList
+       }
+     }
+  }
+   function sendToCore(nodeList) {
+     console.log("NODELIST")
+     console.log(nodeList)
+     fetch("/select_treeview_node", {
+       method: 'POST',
+       credentials: 'same-origin',
+       headers: {
+         'Accept': 'application/json',
+         'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+         'X-CSRFToken': csrftoken,
+       },
+       body: JSON.stringify(nodeList) //JavaScript object of data to POST
+     })
+             .then(value => {
+               location.reload()
+             })
+     return;
+   }
 </script>
 <svg id="av_svg" width="100%" height="100%" class="bird">
   <g class="links bird_links"></g>
