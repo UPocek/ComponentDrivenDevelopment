@@ -64,12 +64,14 @@
     <div class="separator"></div>
   
     <div class="search">
-      <input id="search_input" class="input_filed" type="text" />
+      <label for="search">Search: </label>
+      <input id="search_input" name="search" class="input_filed" type="text" />
     </div>
   
     <div class="separator"></div>
   
     <div class="filter">
+      <label for="filter">Filter: </label>
       <select class="input_filed" name="attribute" id="attribute">
         {% for a in all_attributes %}
         <option value="{{a}}">{{a}}</option>
@@ -94,7 +96,6 @@
 
 </div>
 
-
 <div class="filters_applied">
   {% for search_query in all_search_queries %}
   <div class="query_card">
@@ -118,8 +119,6 @@
   {% include "core/tree_view.html" %}
 
 </div>
-
-
 
 
 {% autoescape off %}

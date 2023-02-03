@@ -4,12 +4,6 @@ from django.urls import reverse
 from django.shortcuts import render
 from .form import JsonNeuralNetworkForm
 
-
-def handle_uploaded_file(file):
-    with open('..\ml-provider\ml_provider\examples\example.json', 'wb+') as destination:
-        for chunk in file.chunks():
-            destination.write(chunk)
-
 def neural_network_parsing(request):
     if request.method == 'POST':
         form = JsonNeuralNetworkForm(request.POST, request.FILES)
@@ -20,9 +14,12 @@ def neural_network_parsing(request):
                 if plugin.identifier() == "ml_provider":
                     plugin.load(graph_name=request.POST['title'])
                     break
-            else:
-                print("Neural network provider is not installed")
             return HttpResponseRedirect(reverse("index"))
     else:
         form = JsonNeuralNetworkForm()
     return render(request, 'ml_provider/index.html', {'form': form})
+
+def handle_uploaded_file(file):
+    with open('..\ml-provider\ml_provider\examples\example.json', 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)

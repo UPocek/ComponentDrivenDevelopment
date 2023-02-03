@@ -88,6 +88,15 @@ def load_visualizator(request,visualizator_name):
 
     return HttpResponse("None of visualizato plugins are installed or no graph selected")
 
+@csrf_exempt
+def select_treeview_node(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    content = body
+    data = content
+    context['treeview_selector_list'] = data
+    return HttpResponseRedirect(reverse('index'))
+
 def delete_helper_graphs():
     all_graphs_from_db = Graph.objects.all()
     for graph in all_graphs_from_db:
@@ -95,13 +104,3 @@ def delete_helper_graphs():
             for node in graph.get_all_nodes():
                 Node.objects.filter(pk=node.pk).delete()
             Graph.objects.filter(pk=graph.pk).delete()
-
-
-def select_treeview_node(request):
-
-    body_unicode = request.body.decode('utf-8')
-    body = json.loads(body_unicode)
-    content = body
-    data = content
-    context['treeview_selector_list'] = data
-    return HttpResponseRedirect(reverse('index'))

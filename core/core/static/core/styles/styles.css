@@ -8,6 +8,8 @@
   --White: #fff;
   --Secondary: #dbdbdb;
   --SecondaryHover: #b5b5b5;
+  --AccentLine: #fdb0b0;
+  --AccentBox: #1589e0;
 }
 
 html {
@@ -54,10 +56,14 @@ svg {
   border-left: 1px solid var(--Secondary);
 }
 
+.submit_filters{
+  margin-top: 5px;
+}
+
 #apply_filter_and_search {
   padding: 10px 15px;
   border-radius: 50%;
-  background-color: var(--Amber);
+  background-color: var(--AccentLine);
   color: var(--Primary);
 }
 

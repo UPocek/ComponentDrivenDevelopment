@@ -14,7 +14,6 @@ urlpatterns = [
 
 provider_plugins = apps.get_app_config('core').provider_plugins
 
-print([p.identifier() for p in provider_plugins])
 for plugin in provider_plugins:
     plugin_path = path(f'{plugin.identifier()}/', include(f"{plugin.identifier()}.urls"))
     urlpatterns.append(plugin_path)

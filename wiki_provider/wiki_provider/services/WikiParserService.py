@@ -20,9 +20,7 @@ def scrape(graph_name, wiki_link, depth, num_of_links):
     _pages.add(wiki_link)
     _graph = Graph(name=graph_name)
     _graph.save()
-    print(depth, num_of_links)
     scrape_node(None, wiki_link, 0)
-    print(_graph)
 
 
 def scrape_node(parent, child, lvl):
