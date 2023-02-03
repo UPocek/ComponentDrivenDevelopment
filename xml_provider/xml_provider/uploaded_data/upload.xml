@@ -1,45 +1,71 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<bookstore>
-
-	<title>FTN bookstore</title>
-
-	<book category="COOKING">
-		<title lang="en">Everyday Italian</title>
-		<author>Giada De Laurentiis</author>
-		<year>2005</year>
-		<price>30.00</price>
-	</book>
-
-	<book category="CHILDREN">
-		<title lang="en">Harry Potter</title>
-		<author>J K. Rowling</author>
-		<year>2005</year>
-		<price>29.99</price>
-	</book>
-
-	<book category="PROGRAMMING">
-		<title lang="fr">Penser en Java (4e edition)</title>
-		<author>Bruce Eckel</author>
-		<year>2006</year>
-		<price>38.00</price>
-	</book>
-
-	<book category="WEB">
-		<title lang="en">XQuery Kick Start</title>
-		<author>James McGovern</author>
-		<author>Per Bothner</author>
-		<author>Kurt Cagle</author>
-		<author>James Linn</author>
-		<author>Vaidyanathan Nagarajan</author>
-		<year>2003</year>
-		<price>49.99</price>
-	</book>
-
-	<book category="WEB">
-		<title lang="en">Learning XML</title>
-		<author>Erik T. Ray</author>
-		<year>2003</year>
-		<price>39.95</price>
-	</book>
-
-</bookstore>
+<?xml version="1.0"?>
+<circuits>
+    <hungaroring>
+        <winners>
+            <year year="2020">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+            <year year="2019">
+                <driver>Max Verstappen</driver>
+                <team>Red Bull Racing</team>
+            </year>
+            <year year="2018">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+            <year year="2017">
+                <driver>Sebastian Vettel</driver>
+                <team>Ferrari</team>
+            </year>
+            <year year="2016">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+        </winners>
+    </hungaroring>
+    <silverstone>
+        <winners>
+        <year year="2020">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        <year year="2019">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        <year year="2018">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        <year year="2017">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        <year year="2016">
+            <driver>Lewis Hamilton</driver>
+            <team>Mercedes</team>
+        </year>
+        </winners>
+    </silverstone>
+    <castellete>
+        <winners>
+            <year year="2019">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+            <year year="2018">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+            <year year="2017">
+                <driver>Sebastian Vettel</driver>
+                <team>Ferrari</team>
+            </year>
+            <year year="2016">
+                <driver>Lewis Hamilton</driver>
+                <team>Mercedes</team>
+            </year>
+        </winners>
+    </castellete>
+</circuits>
