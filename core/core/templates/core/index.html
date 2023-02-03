@@ -60,43 +60,54 @@
         {% endfor %}
       </select>
     </div>
+  </div>
+
+  <div class="additional_info">
+    <div class="group_1">
+
+      <div class="separator"></div>
   
-    <div class="separator"></div>
-  
-    <div class="search">
-      <label for="search">Search: </label>
-      <input id="search_input" name="search" class="input_filed" type="text" />
+      <div class="search">
+        <label for="search">Search: </label>
+        <input id="search_input" name="search" class="input_filed" type="text" />
+      </div>
+    
+      <div class="separator"></div>
+
     </div>
-  
-    <div class="separator"></div>
-  
-    <div class="filter">
-      <label for="filter">Filter: </label>
-      <select class="input_filed" name="attribute" id="attribute">
-        {% for a in all_attributes %}
-        <option value="{{a}}">{{a}}</option>
-        {% endfor %}
-      </select>
-      <select class="input_filed" name="operator" id="operator">
-        {% for o in all_operators %}
-        <option value="{{o}}">{{o}}</option>
-        {% endfor %}
-      </select>
-      <input id="filter_value" class="input_filed" type="text" />
+
+    <div class="group_2">
+
+      <div class="filter">
+        <label for="filter">Filter: </label>
+        <select class="input_filed" name="attribute" id="attribute">
+          {% for a in all_attributes %}
+          <option value="{{a}}">{{a}}</option>
+          {% endfor %}
+        </select>
+        <select class="input_filed" name="operator" id="operator">
+          {% for o in all_operators %}
+          <option value="{{o}}">{{o}}</option>
+          {% endfor %}
+        </select>
+        <input id="filter_value" class="input_filed" type="text" />
+      </div>
+    
+      <div class="separator"></div>
+    
     </div>
-  
-    <div class="separator"></div>
-  
+
     <div class="submit_filters">
       <a id="apply_filter_and_search">
         <i class="fa fa-angle-right" aria-hidden="true"></i>
       </a>
     </div>
-  </div>
+        
+  </div>  
 
 </div>
 
-<div class="filters_applied">
+<div class="filters_applied" id="filters_applied">
   {% for search_query in all_search_queries %}
   <div class="query_card">
     <div class="query_text">{{search_query}}</div>
@@ -114,10 +125,14 @@
   {% endfor %}
 </div>
 
-<div class="tree_view">
+<div class="tree_view" id="tree_view">
 
   {% include "core/tree_view.html" %}
 
+</div>
+
+<div class="iks" id="iks">
+  <i class="fa fa-x" aria-hidden="true"></i>
 </div>
 
 

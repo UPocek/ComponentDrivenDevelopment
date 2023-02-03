@@ -98,9 +98,13 @@ def select_treeview_node(request):
     return HttpResponseRedirect(reverse('index'))
 
 def delete_helper_graphs():
-    all_graphs_from_db = Graph.objects.all()
-    for graph in all_graphs_from_db:
-        if(graph.name == 'sub'):
-            for node in graph.get_all_nodes():
-                Node.objects.filter(pk=node.pk).delete()
-            Graph.objects.filter(pk=graph.pk).delete()
+    try:
+        all_graphs_from_db = Graph.objects.all()
+        for graph in all_graphs_from_db:
+            if(graph.name == 'sub'):
+                for node in graph.get_all_nodes():
+                    Node.objects.filter(pk=node.pk).delete()
+                Graph.objects.filter(pk=graph.pk).delete()
+    except Exception:
+        pass
+    print("AAA")
