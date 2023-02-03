@@ -12,7 +12,8 @@ providers = apps.get_app_config("core").provider_plugins
 context = {
 'visualizators': visualizators,
 'providers': providers,
-'treeview_selector_list':"undefined"
+'treeview_selector_list':"undefined",
+'selected_node':"undefined"
 }
 
 def index(request):
@@ -37,6 +38,8 @@ def choose_graph(request, graph_name):
     apps.get_app_config("core").sub_graph = None
     apps.get_app_config("core").applied_searches.clear()
     apps.get_app_config("core").applied_filters.clear()
+    context['selected_node'] = "undefined"
+    context['treeview_selector_list'] = "undefined"
     return HttpResponseRedirect(reverse("index"))
 
 @csrf_exempt
@@ -81,9 +84,10 @@ def load_visualizator(request,visualizator_name):
             apps.get_app_config("core").current_visualizator = visualizator_name
             graph_to_visualise = apps.get_app_config("core").get_graph_to_use()
             if graph_to_visualise is not None:
-                context['content'] = plugin.show(graph_to_visualise)
                 if visualizator_name == 'Ar visualizator':
+                    context['ar_to_use'] = plugin.show(graph_to_visualise,context['selected_node'])
                     return render(request, 'core/empty.html', context=context)
+                context['content'] = plugin.show(graph_to_visualise,context['selected_node'])
                 return render(request, 'core/graph.html', context=context)
 
     return HttpResponse("None of visualizato plugins are installed or no graph selected")
@@ -107,4 +111,16 @@ def delete_helper_graphs():
                 Graph.objects.filter(pk=graph.pk).delete()
     except Exception:
         pass
-    print("AAA")
+
+def select_treeview_node(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    content = body
+    data = content
+    if not data:
+        context['treeview_selector_list'] = "undefined"
+        context['selected_node'] = "undefined"
+    else:
+        context['treeview_selector_list'] = data
+        context['selected_node'] = data[0]
+    return HttpResponseRedirect(reverse('index'))

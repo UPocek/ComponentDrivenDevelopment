@@ -123,6 +123,8 @@
       .attr("class", "node_av");
     d3.selectAll("marker").attr("fill", "#fdb0b0");
     selected_node_av = null;
+    nodelist = []
+    sendToCore(nodelist)
   }
   function findNodeIds(nodeId) {
     let iteration_node_id = nodeId;
@@ -166,6 +168,9 @@
     var nodes_for_av = {{nodes|safe}}
 
     var links_for_av = {{edges|safe}}
+
+    let selected_node_past_av = {{selected_node|safe}}
+
 
     var width_for_av = window.screen.width, height = window.screen.height
     var simulation_for_av = d3.forceSimulation(nodes_for_av)
@@ -400,4 +405,21 @@
   initZoom()
   insertLinks()
   insertNodes()
+
+    if(selected_node_past_av !== undefined) {
+
+      selected_node_past_test_sv = d3.select(`.node_av[id='${selected_node_past_av}']`)._groups[0][0]
+      if(selected_node_past_test_sv != null){
+          d3.select('.links')
+         .selectAll(`line`)
+         .attr('class','line_av pale_line_av')
+        d3.select(`.nodes`).selectAll('.node_av').selectAll('rect').attr('class','node_av pale_node_av')
+        d3.selectAll('marker').attr('fill','#fdd5d5')
+
+        d3.select('.links')
+         .selectAll(`line[source='${selected_node_past_av}'],line[target='${selected_node_past_av}']`)
+         .attr('class','line_av hovered_line_av')
+         d3.select(`.node_av[id='${selected_node_past_av}']`).selectAll('rect').attr('class','node_av hovered_node_av')
+        selected_node_av = selected_node_past_test_sv.__data__
+      }}
 </script>
