@@ -11,7 +11,7 @@ class SimpleVisualizator():
     def name(self):
         return "Simple visualizator"
 
-    def show(self, g):
+    def show(self, g, last_selected):
         nodes = g.get_all_nodes()
         edges = []
         for node in nodes:
@@ -25,5 +25,6 @@ class SimpleVisualizator():
             target = edge["target"]
             list_edges.append( {"source":name_indexer[source],"target":name_indexer[target]})
         content = {"nodes": list_nodes,
-                  "edges":list_edges}
+                  "edges":list_edges,
+                   "selected_node":last_selected}
         return render_to_string("simple_visualizator/simple_visualizator.html",context=content)

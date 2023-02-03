@@ -12,7 +12,7 @@ class ArVisualizator(Visualizator):
     def name(self):
         return "Ar visualizator"
 
-    def show(self, g):
+    def show(self, g, last_selected_node):
         nodes = g.get_all_nodes()
         edges = []
         for node in nodes:
