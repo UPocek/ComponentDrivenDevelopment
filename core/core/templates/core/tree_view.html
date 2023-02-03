@@ -310,7 +310,7 @@
            let node = d3.select(`.node_tv[selectionId='${item}']`)._groups[0][0]
            if (node && node.loaded === undefined) {
               getNeigbours(node.__data__)
-              node.loaded = true;
+              node.__data__.loaded = true;
               click(node.__data__);
             } else {
               click(node.__data__);
