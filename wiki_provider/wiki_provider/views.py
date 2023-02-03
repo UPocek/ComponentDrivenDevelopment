@@ -21,7 +21,5 @@ def scrape_page(request):
         if plugin.identifier() == "wiki_provider":
             plugin.load(graph_name=graph_name, wiki_link=wiki_link, depth=depth, num_of_links=num_of_links)
             break
-    else:
-        print("Nije instaliran plagin")
     return HttpResponseRedirect(reverse("index"))
 

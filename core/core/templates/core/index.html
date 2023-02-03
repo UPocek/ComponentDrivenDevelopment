@@ -64,12 +64,14 @@
     <div class="separator"></div>
   
     <div class="search">
-      <input id="search_input" class="input_filed" type="text" />
+      <label for="search">Search: </label>
+      <input id="search_input" name="search" class="input_filed" type="text" />
     </div>
   
     <div class="separator"></div>
   
     <div class="filter">
+      <label for="filter">Filter: </label>
       <select class="input_filed" name="attribute" id="attribute">
         {% for a in all_attributes %}
         <option value="{{a}}">{{a}}</option>
@@ -93,7 +95,6 @@
   </div>
 
 </div>
-
 
 <div class="filters_applied">
   {% for search_query in all_search_queries %}
@@ -123,6 +124,11 @@
 {% autoescape off %}
 <div id="visualization-container">{{content}}</div>
 {% endautoescape%}
+
+
+<div class="bird_view" id="bird_view_div">
+  {% include "core/bird_view.html" %}
+</div>
 
 <script src="../../static/core/scripts/index.js"></script>
 {% endblock %}

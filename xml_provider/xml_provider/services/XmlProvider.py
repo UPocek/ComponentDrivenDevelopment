@@ -11,6 +11,3 @@ class XmlProvider(Provider):
 
     def load(self, graph_name, graph_description, xml_doc):
         parse_xml(graph_name, graph_description, xml_doc)
-        print(graph_name)
-        print(graph_description)
-        print(xml_doc)

@@ -25,7 +25,7 @@ def find_nodes(root, parent):
     global _graph
     for child in root:
         attributes = {"title": child.tag}
-        if len(child.getchildren()) == 0:
+        if len(list(child)) == 0:
             child_node = make_leaf_node(child)
             parent.add_neighbour(child_node)
             continue

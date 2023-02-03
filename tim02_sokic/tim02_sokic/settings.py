@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure--m2kjc377%r)(_8&$@gro$*)e1ojxs$(r!$bkb^vtp_9fwdg%&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
 ]
 
 for ep in pkg_resources.iter_entry_points(group="core.django_apps"):
