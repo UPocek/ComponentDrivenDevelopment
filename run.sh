@@ -27,4 +27,6 @@ python setup.py install
 cd ..
 
 cd tim02_sokic
+python manage.py makemigrations
+python manage.py migrate
 python manage.py runserver
