@@ -1,0 +1,40 @@
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+
+  <script src="//unpkg.com/aframe"></script>
+  <script src="//unpkg.com/@ar-js-org/ar.js"></script>
+
+  <script src="//unpkg.com/3d-force-graph-ar"></script>
+  <!--  <script src="../../dist/3d-force-graph-ar.js"></script>-->
+</head>
+
+<body>
+  <div id="3d-graph"></div>
+
+  <script>
+    // Random tree
+
+    let nodes_for_ar = {{nodes|safe}}
+
+    let links_for_ar = {{edges|safe}}
+
+
+    const gData = {
+      nodes: nodes_for_ar,
+      links: links_for_ar
+    };
+
+    const Graph = ForceGraphAR()(document.getElementById("3d-graph"))
+      .graphData(gData)
+      .nodeRelSize(10)
+      .linkWidth(3)
+      .nodeOpacity(0.9)
+      .linkOpacity(0.4)
+      .nodeColor(() => "firebrick")
+      .linkColor(() => "darkgrey");
+  </script>
+</body>

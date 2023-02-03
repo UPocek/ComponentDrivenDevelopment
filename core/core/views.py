@@ -80,6 +80,8 @@ def load_visualizator(request,visualizator_name):
             graph_to_visualise = apps.get_app_config("core").get_graph_to_use()
             if graph_to_visualise is not None:
                 context['content'] = plugin.show(graph_to_visualise)
+                if visualizator_name == 'Ar visualizator':
+                    return render(request, 'core/empty.html', context=context)
                 return render(request, 'core/graph.html', context=context)
 
     return HttpResponse("None of visualizato plugins are installed or no graph selected")
