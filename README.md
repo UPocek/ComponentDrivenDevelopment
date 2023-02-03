@@ -63,5 +63,5 @@ Run installation script:
 ./run.sh
 ```
 ### Sixth step
-Open your browser on [http://localhost:8000/](http://localhost:8000/) and check it out!
+Open your browser on [http://127.0.0.1:8000/](http://127.0.0.1:8000/) and check it out!
 #
