@@ -84,9 +84,10 @@ def load_visualizator(request,visualizator_name):
             apps.get_app_config("core").current_visualizator = visualizator_name
             graph_to_visualise = apps.get_app_config("core").get_graph_to_use()
             if graph_to_visualise is not None:
-                context['content'] = plugin.show(graph_to_visualise,context['selected_node'])
                 if visualizator_name == 'Ar visualizator':
+                    context['ar_to_use'] = plugin.show(graph_to_visualise,context['selected_node'])
                     return render(request, 'core/empty.html', context=context)
+                context['content'] = plugin.show(graph_to_visualise,context['selected_node'])
                 return render(request, 'core/graph.html', context=context)
 
     return HttpResponse("None of visualizato plugins are installed or no graph selected")
@@ -101,16 +102,17 @@ def select_treeview_node(request):
     return HttpResponseRedirect(reverse('index'))
 
 def delete_helper_graphs():
-    all_graphs_from_db = Graph.objects.all()
-    for graph in all_graphs_from_db:
-        if(graph.name == 'sub'):
-            for node in graph.get_all_nodes():
-                Node.objects.filter(pk=node.pk).delete()
-            Graph.objects.filter(pk=graph.pk).delete()
-
+    try:
+        all_graphs_from_db = Graph.objects.all()
+        for graph in all_graphs_from_db:
+            if(graph.name == 'sub'):
+                for node in graph.get_all_nodes():
+                    Node.objects.filter(pk=node.pk).delete()
+                Graph.objects.filter(pk=graph.pk).delete()
+    except Exception:
+        pass
 
 def select_treeview_node(request):
-
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     content = body
@@ -122,4 +124,3 @@ def select_treeview_node(request):
         context['treeview_selector_list'] = data
         context['selected_node'] = data[0]
     return HttpResponseRedirect(reverse('index'))
-

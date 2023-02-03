@@ -24,10 +24,10 @@ svg {
   z-index: -1;
 }
 
-.dropdown_container {
+#main-box{
   margin: auto;
   position: fixed;
-  top: 0;
+  top: 2vh;
   display: flex;
   flex-direction: row;
   padding: 20px 10px;
@@ -36,6 +36,12 @@ svg {
   background-color: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(5px);
   border-radius: 8px;
+}
+
+.dropdown_container, .additional_info, .group_1, .group_2{
+  margin: auto;
+  display: flex;
+  flex-direction: row;
 }
 
 .dropdown {
@@ -163,4 +169,90 @@ svg {
   z-index: 7;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
+}
+
+.iks>i{
+  color: var(--AccentLine);
+  font-size: 2rem;
+  position: fixed;
+  top: 2vh;
+  right: 2vh;
+  cursor: pointer;
+  z-index: 12;
+}
+
+.hide{
+  display: none !important;
+}
+
+@media (max-width: 1500px) {
+  #main-box label{
+    display: none;
+  }
+  .dropdown {
+    margin: auto 5px;
+  }
+  .separator {
+    margin: auto 5px;
+  }
+  #main-box{
+    padding: 16px 8px;
+  }
+}
+
+@media (max-width: 1300px) {
+  #main-box {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .filter, .dropdown{
+    margin: auto 5px;
+  }
+  .additional_info{
+    margin-top: 10px;
+  }
+  .separator{
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  #main-box {
+    text-align: center;
+  }
+  .additional_info{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .tree_view {
+    top: 25vh;
+    width: 200px;
+  }
+  .filters_applied {
+    top: 25vh;
+    padding: 10px;
+    width: 200px;
+  }
+  .bird_view {
+    bottom: 10px;
+    right: 10px;
+    width: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .tree_view {
+    top: 38vh;
+  }
+  .filters_applied {
+    top: 38vh;
+  }
+  .dropdown_container, .additional_info, .group_1, .group_2{
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .submit_filters{
+    margin: 20px;
+  }
+  
 }

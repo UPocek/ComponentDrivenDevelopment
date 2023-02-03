@@ -96,3 +96,17 @@ for(let btn of remove_filter_query_buttons){
   })
 }
 
+let superNav = document.getElementById('main-box');
+let superTree = document.getElementById('tree_view');
+let supperFilters = document.getElementById('filters_applied');
+let supperBird = document.getElementById('bird_view_div');
+
+let iksButton = document.getElementById("iks");
+  iksButton.addEventListener('click', function(event){
+    event.stopPropagation();
+    superNav.classList.toggle('hide');
+    superTree.classList.toggle('hide');
+    supperFilters.classList.toggle('hide');
+    supperBird.classList.toggle('hide');
+});
+
