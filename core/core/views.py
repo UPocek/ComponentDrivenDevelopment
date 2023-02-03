@@ -11,7 +11,8 @@ visualizators = apps.get_app_config("core").visualizator_plugins
 providers = apps.get_app_config("core").provider_plugins
 context = {
 'visualizators': visualizators,
-'providers': providers
+'providers': providers,
+'treeview_selector_list':"undefined"
 }
 
 def index(request):
@@ -25,6 +26,7 @@ def index(request):
     context['all_search_queries'] = apps.get_app_config("core").applied_searches
     context['all_filter_queries'] = apps.get_app_config("core").applied_filters
     context['tree_view'] = apps.get_app_config("core").make_tree_view_node_dict()
+    context['bird_view'] = apps.get_app_config("core").make_bird_view()
     context['selected_graph'] = apps.get_app_config("core").get_graph_to_use()
     return render(request, 'core/index.html', context=context)
 
@@ -93,3 +95,13 @@ def delete_helper_graphs():
             for node in graph.get_all_nodes():
                 Node.objects.filter(pk=node.pk).delete()
             Graph.objects.filter(pk=graph.pk).delete()
+
+
+def select_treeview_node(request):
+
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    content = body
+    data = content
+    context['treeview_selector_list'] = data
+    return HttpResponseRedirect(reverse('index'))

@@ -14,7 +14,7 @@ def get_root(graph_name, xml_doc):
     global _graph
     _graph = Graph(name=graph_name)
     _graph.save()
-    tree = ET.parse('../xml_provider/xml_provider/data/' + xml_doc)
+    tree = ET.parse('../xml_provider/xml_provider/uploaded_data/' + xml_doc)
     root = tree.getroot()
     node = Node(atributes={"title": root.tag})
     _graph.add_node(node)
@@ -25,7 +25,7 @@ def find_nodes(root, parent):
     global _graph
     for child in root:
         attributes = {"title": child.tag}
-        if len(child.getchildren()) == 0:
+        if len(list(child)) == 0:
             child_node = make_leaf_node(child)
             parent.add_neighbour(child_node)
             continue

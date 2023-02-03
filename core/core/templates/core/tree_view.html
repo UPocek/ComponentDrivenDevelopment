@@ -5,6 +5,20 @@
     stroke-width: 3px;
   }
 
+  .base_node_tv{
+      cursor: pointer;
+      fill: #1589e0;
+  }
+  .pale_node_tv{
+    cursor: pointer;
+    fill: #54a2de !important;
+  }
+
+  .hovered_node_tv{
+    cursor: pointer;
+    fill: #015696 !important;
+  }
+
   .node_tv text {
     font: 12px sans-serif;
   }
@@ -14,11 +28,15 @@
     stroke: #ccc;
     stroke-width: 2px;
   }
+
 </style>
+
 <svg id="tree_view_svg"></svg>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
     let nodeForTree = {{ tree_view|safe }};
+    let selectedNodeForTreeListIds = undefined
+    selectedNodeForTreeListIds = {{ treeview_selector_list|safe }};
 
     let rootNode = nodeForTree[Object.keys(nodeForTree)[0]];
     let treeData = {
@@ -28,6 +46,8 @@
     };
 
     function getNeigbours(parent){
+        console.log(parent)
+        console.log(parent.data)
       let new_nodes = nodeForTree[parent.data.name]['neighbours']
       if(new_nodes != []){
       new_nodes.forEach(function(d){
@@ -80,6 +100,16 @@
         d.children = null;
       }
     }
+      function click(d) {
+        if (d.children) {
+          d._children = d.children;
+          d.children = null;
+        } else {
+          d.children = d._children;
+          d._children = null;
+        }
+        update(d);
+      }
 
     function addNewNode(d, item) {
         if (d._children) {
@@ -89,6 +119,10 @@
         }else{
             d._children = [item]
         }
+    }
+
+    function clearColorsTV(){
+    d3.selectAll('.node_tv>rect').attr('class','base_node_tv')
     }
 
     function wrapAttributes(text, width, padding, initial_y_offset) {
@@ -154,10 +188,12 @@
         .enter()
         .append("g")
         .attr("class", "node_tv")
+          .attr("selectionId",function(d){return d.data.name})
         .attr("transform", function (d) {
           return "translate(" + source.y0 + "," + source.x0 + ")";
         })
         .on("click", function (event, d) {
+            clearColorsTV()
           if (d.loaded === undefined) {
             getNeigbours(d)
             d.loaded = true;
@@ -182,7 +218,7 @@
         .attr('y',15)
         .attr('width',120)
         .attr('height',70)
-        .attr('fill','rgba(21, 137, 224, 0.8)');
+        .attr('class','base_node_tv');
       // Add labels for the nodes
       nodeEnter
         .append("text")
@@ -286,5 +322,29 @@
         return path;
       }
 
+
+
     }
+    function unfold(){
+        if(selectedNodeForTreeListIds){
+         selectedNodeForTreeListIds.reverse()
+            let lastNode = selectedNodeForTreeListIds.pop();
+         for(item of selectedNodeForTreeListIds){
+             console.log(item)
+             let node = d3.select(`.node_tv[selectionId='${item}']`)._groups[0][0]
+             console.log(node)
+             if (node.loaded === undefined) {
+                getNeigbours(node.__data__)
+                node.loaded = true;
+                click(node.__data__);
+              } else {
+                click(node.__data__);
+              }
+         }
+         console.log(lastNode)
+         d3.selectAll('.node_tv>rect').attr('class','base_node_tv pale_node_tv')
+         d3.select(`.node_tv[selectionid='${lastNode}']>rect`).attr('class','base_node_tv hovered_node_tv')
+    }
+    }
+    unfold()
 </script>
