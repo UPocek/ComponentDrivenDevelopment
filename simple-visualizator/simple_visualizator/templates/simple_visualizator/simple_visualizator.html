@@ -119,8 +119,6 @@
      }
   }
    function sendToCore(nodeList){
-     console.log("NODELIST")
-     console.log(nodeList)
      fetch("/select_treeview_node", {
                   method: 'POST',
                   credentials: 'same-origin',
@@ -145,6 +143,8 @@
       selectAll('circle').attr('class','baseCircle')
       d3.selectAll('marker').attr('fill','#fdb0b0')
     selected_node_sv = null;
+    nodelist = []
+    sendToCore(nodelist)
   }
 
 </script>
@@ -160,6 +160,9 @@
     let nodes_sv = {{nodes|safe}}
 
     let links_sv = {{edges|safe}}
+
+    let selected_node_past_sv = {{selected_node|safe}}
+
 
 
     const svg_sv = d3.select("#simp_vis_svg") .attr('tabindex', '0')
@@ -240,6 +243,8 @@
 
     }
 
+
+
     function simpleVizualization(d){
 
 
@@ -291,6 +296,19 @@
 
     insertNodes()
     insertLinks()
+
+    if(selected_node_past_sv !== undefined) {
+        d3.select('.links_sv')
+         .selectAll(`line`)
+         .attr('class','paleLine')
+        d3.select(`.nodes_sv`).selectAll('.node_sv').selectAll('circle').attr('class','paleCircle')
+        d3.selectAll('marker').attr('fill','#fdd5d5')
+        d3.selectAll(`line[source='${selected_node_past_sv}'],line[target='${selected_node_past_sv}']`)
+                .attr('class', 'hoveredLine')
+        d3.select(`.node_sv[id='${selected_node_past_sv}']`).selectAll('circle').attr('class', 'hoveredCircle')
+            selected_node_sv = d3.select(`.node_sv[id='${selected_node_past_sv}']`)._groups[0][0].__data__
+
+      }
 
   initZoom()
 </script>

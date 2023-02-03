@@ -194,6 +194,8 @@
         })
         .on("click", function (event, d) {
             clearColorsTV()
+
+            console.log(d3.select())
           if (d.loaded === undefined) {
             getNeigbours(d)
             d.loaded = true;
@@ -335,7 +337,7 @@
              console.log(node)
              if (node.loaded === undefined) {
                 getNeigbours(node.__data__)
-                node.loaded = true;
+                node.__data__.loaded = true;
                 click(node.__data__);
               } else {
                 click(node.__data__);

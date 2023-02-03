@@ -12,5 +12,5 @@ class Visualizator(ABC):
         pass
 
     @abstractmethod
-    def show(self, grapg:Graph):
+    def show(self, grapg:Graph, last_selected_node):
         pass
