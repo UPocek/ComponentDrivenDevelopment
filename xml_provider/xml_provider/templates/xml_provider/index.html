@@ -1,30 +1,11 @@
-{% extends "xml_provider/base.html" %} {% block title %}Tim02 - sokic{% endblock %}
-{%block body %}
+{% extends "xml_provider/base.html" %} {% block title %}Tim02 - sokic{% endblock
+%} {%block body %}
 
-<div id = "whole-form">
+<div id="whole-form">
   <form method="POST" enctype="multipart/form-data">
-<!--  <div class = "form-group">-->
-<!--&lt;!&ndash;    <label for="graph-name">Graph Name:</label>&ndash;&gt;-->
-<!--&lt;!&ndash;    <input type="text" id="graph-name" name="graph_name">&ndash;&gt;-->
-<!--  </div>-->
-<!--    <div class = "form-group">-->
-<!--&lt;!&ndash;      <label for="graph-description">Graph Description:</label>&ndash;&gt;-->
-<!--&lt;!&ndash;      <input type="text" id="graph-description" name="graph-description">&ndash;&gt;-->
-<!--    </div>-->
-<!--  <div class = "form-group" >-->
-<!--&lt;!&ndash;    <label for="xml-docs">XML Docs:</label>&ndash;&gt;-->
-<!--&lt;!&ndash;    <select id="xml-docs" name="xml-docs">&ndash;&gt;-->
-<!--&lt;!&ndash;      {% for value, text in options %}&ndash;&gt;-->
-<!--&lt;!&ndash;      <option value="{{ value }}">{{ text }}</option>&ndash;&gt;-->
-<!--&lt;!&ndash;      {% endfor %}&ndash;&gt;-->
-<!--&lt;!&ndash;    </select>&ndash;&gt;-->
-<!--  </div>-->
     {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Submit</button>
-</form>
-
+    <button type="submit">Submit</button>
+  </form>
 </div>
-
-
 
 {% endblock %}

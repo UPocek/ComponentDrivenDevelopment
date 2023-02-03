@@ -11,3 +11,10 @@ urlpatterns = [
     path('delete_filter_query/<int:query_id>', views.delete_filter_query, name='delete_filter_query'),
     path('select_treeview_node', views.select_treeview_node)
 ]
+
+provider_plugins = apps.get_app_config('core').provider_plugins
+
+for plugin in provider_plugins:
+    plugin_path = path(f'{plugin.identifier()}/', include(f"{plugin.identifier()}.urls"))
+    urlpatterns.append(plugin_path)
+

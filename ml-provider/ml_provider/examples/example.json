@@ -1,22 +1,418 @@
-{
-  "id": "id1",
-  "first": "John",
-  "last": "Doe",
-  "years": 53,
-  "children": [
+{"layers":[
     {
-      "id": "id2",
-      "first": "Mike",
-      "last": "Doe",
-      "years": 25,
-      "children": []
+      "name": "_caffe2::BBoxTransform",
+      "inputs": [
+        { "name": "rois", "type": "Tensor" },
+        { "name": "deltas", "type": "Tensor" },
+        { "name": "im_info", "type": "Tensor" },
+        { "name": "weights", "type": "float32[]" },
+        { "name": "apply_scale", "type": "boolean" },
+        { "name": "rotated", "type": "boolean" },
+        { "name": "angle_bound_on", "type": "boolean" },
+        { "name": "angle_bound_lo", "type": "int64" },
+        { "name": "angle_bound_hi", "type": "int64" },
+        { "name": "clip_angle_thresh", "type": "float32" },
+        { "name": "legacy_plus_one", "type": "boolean" }
+      ],
+      "outputs": [
+        { "name": "output_0", "type": "Tensor" },
+        { "name": "output_1", "type": "Tensor" }
+      ]
     },
     {
-      "id": "id3",
-      "first": "Lucy",
-      "last": "Doe",
-      "years": 15,
-      "children": []
+      "name": "_caffe2::BatchPermutation",
+      "inputs": [
+        { "name": "X", "type": "Tensor" },
+        { "name": "indices", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "_caffe2::BoxWithNMSLimit",
+      "inputs": [
+        { "name": "scores", "type": "Tensor" },
+        { "name": "boxes", "type": "Tensor" },
+        { "name": "batch_splits", "type": "Tensor" },
+        { "name": "score_thresh", "type": "float32" },
+        { "name": "nms", "type": "float32" },
+        { "name": "detections_per_im", "type": "int64" },
+        { "name": "soft_nms_enabled", "type": "boolean" },
+        { "name": "soft_nms_method", "type": "string" },
+        { "name": "soft_nms_sigma", "type": "float32" },
+        { "name": "soft_nms_min_score_thres", "type": "float32" },
+        { "name": "rotated", "type": "boolean" },
+        { "name": "cls_agnostic_bbox_reg", "type": "boolean" },
+        { "name": "input_boxes_include_bg_cls", "type": "boolean" },
+        { "name": "output_classes_include_bg_cls", "type": "boolean" },
+        { "name": "legacy_plus_one", "type": "boolean" }
+      ],
+      "outputs": [
+        { "name": "scores", "type": "Tensor" },
+        { "name": "boxes", "type": "Tensor" },
+        { "name": "classes", "type": "Tensor" },
+        { "name": "batch_splits", "type": "Tensor" },
+        { "name": "keeps", "type": "Tensor" },
+        { "name": "keeps_size", "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "_caffe2::CollectRpnProposals",
+      "inputs": [
+        { "name": "input_list", "type": "Tensor[]" },
+        { "name": "rpn_max_level", "type": "int64" },
+        { "name": "rpn_min_level", "type": "int64" },
+        { "name": "rpn_post_nms_topN", "type": "int64" }
+      ],
+      "outputs": [
+        { "name": "rois", "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "_caffe2::CopyCPUToGPU",
+      "inputs": [
+        { "name": "input", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "_caffe2::CopyGPUToCPU",
+      "inputs": [
+        { "name": "input", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "_caffe2::DistributeFpnProposals",
+      "inputs": [
+        { "name": "rois", "type": "Tensor" },
+        { "name": "roi_canonical_scale", "type": "int64" },
+        { "name": "roi_canonical_level", "type": "int64" },
+        { "name": "roi_max_level", "type": "int64" },
+        { "name": "roi_min_level", "type": "int64" },
+        { "name": "legacy_plus_one", "type": "boolean" }
+      ],
+      "outputs": [
+        { "name": "rois_fpn2", "type": "Tensor" },
+        { "name": "rois_fpn3", "type": "Tensor" },
+        { "name": "rois_fpn4", "type": "Tensor" },
+        { "name": "rois_fpn5", "type": "Tensor" },
+        { "name": "rois_idx_restore_int32", "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "_caffe2::GenerateProposals",
+      "inputs": [
+        { "name": "scores", "type": "Tensor" },
+        { "name": "bbox_deltas", "type": "Tensor" },
+        { "name": "im_info", "type": "Tensor" },
+        { "name": "anchors", "type": "Tensor" },
+        { "name": "spatial_scale", "type": "float32" },
+        { "name": "pre_nms_topN", "type": "int64" },
+        { "name": "post_nms_topN", "type": "int64" },
+        { "name": "nms_thresh", "type": "float32" },
+        { "name": "min_size", "type": "float32" },
+        { "name": "angle_bound_on", "type": "boolean" },
+        { "name": "angle_bound_lo", "type": "int64" },
+        { "name": "angle_bound_hi", "type": "int64" },
+        { "name": "clip_angle_thresh", "type": "float32" },
+        { "name": "legacy_plus_one", "type": "boolean" }
+      ],
+      "outputs": [
+        { "name": "output_0", "type": "Tensor" },
+        { "name": "output_1", "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "_caffe2::RoIAlign",
+      "inputs": [
+        { "name": "features", "type": "Tensor" },
+        { "name": "rois", "type": "Tensor" },
+        { "name": "order", "type": "string" },
+        { "name": "spatial_scale", "type": "float32" },
+        { "name": "pooled_h", "type": "int64" },
+        { "name": "pooled_w", "type": "int64" },
+        { "name": "sampling_ratio", "type": "int64" },
+        { "name": "aligned", "type": "boolean" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__and__.Scalar",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Scalar" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__and__.Tensor",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__iand__.Scalar",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Scalar" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__iand__.Tensor",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__ilshift__.Scalar",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Scalar" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__ilshift__.Tensor",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__interpolate",
+      "inputs": [
+        { "name": "input", "type": "Tensor" },
+        { "name": "size", "type": "int64", "optional": true, "default": null },
+        { "name": "scale_factor", "type": "float32", "optional": true, "default": null },
+        { "name": "mode", "type": "string", "default": "nearest" },
+        { "name": "align_corners", "type": "boolean", "optional": true, "default": null },
+        { "name": "recompute_scale_factor", "type": "boolean", "optional": true, "default": null },
+        { "name": "antialias", "type": "boolean", "default": false }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__interpolate.scale_list",
+      "inputs": [
+        { "name": "input", "type": "Tensor" },
+        { "name": "size", "type": "int64", "optional": true, "default": null },
+        { "name": "scale_factor", "type": "float32[]", "optional": true, "default": null },
+        { "name": "mode", "type": "string", "default": "nearest" },
+        { "name": "align_corners", "type": "boolean", "optional": true, "default": null },
+        { "name": "recompute_scale_factor", "type": "boolean", "optional": true, "default": null },
+        { "name": "antialias", "type": "boolean", "default": false }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__interpolate.size_list",
+      "inputs": [
+        { "name": "input", "type": "Tensor" },
+        { "name": "size", "type": "int64[]", "optional": true, "default": null },
+        { "name": "scale_factor", "type": "float32", "optional": true, "default": null },
+        { "name": "mode", "type": "string", "default": "nearest" },
+        { "name": "align_corners", "type": "boolean", "optional": true, "default": null },
+        { "name": "recompute_scale_factor", "type": "boolean", "optional": true, "default": null },
+        { "name": "antialias", "type": "boolean", "default": false }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__interpolate.size_list_scale_list",
+      "inputs": [
+        { "name": "input", "type": "Tensor" },
+        { "name": "size", "type": "int64[]", "optional": true, "default": null },
+        { "name": "scale_factor", "type": "float32[]", "optional": true, "default": null },
+        { "name": "mode", "type": "string", "default": "nearest" },
+        { "name": "align_corners", "type": "boolean", "optional": true, "default": null },
+        { "name": "recompute_scale_factor", "type": "boolean", "optional": true, "default": null },
+        { "name": "antialias", "type": "boolean", "default": false }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__irshift__.Scalar",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Scalar" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__irshift__.Tensor",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__ixor__.Scalar",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Scalar" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__ixor__.Tensor",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__lshift__.Scalar",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Scalar" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__lshift__.Tensor",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__or__.Scalar",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Scalar" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__or__.Tensor",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__rshift__.Scalar",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Scalar" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__rshift__.Tensor",
+      "inputs": [
+        { "name": "self", "type": "Tensor" },
+        { "name": "other", "type": "Tensor" }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__upsample",
+      "category": "Layer",
+      "inputs": [
+        { "name": "input", "type": "Tensor" },
+        { "name": "size", "type": "int64", "optional": true, "default": null },
+        { "name": "scale_factor", "type": "int64", "optional": true, "default": null },
+        { "name": "mode", "type": "string", "default": "nearest" },
+        { "name": "align_corners", "type": "boolean", "optional": true, "default": null }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__upsample.size_list",
+      "category": "Layer",
+      "inputs": [
+        { "name": "input", "type": "Tensor" },
+        { "name": "size", "type": "int64[]", "optional": true, "default": null },
+        { "name": "scale_factor", "type": "int64", "optional": true, "default": null },
+        { "name": "mode", "type": "string", "default": "nearest" },
+        { "name": "align_corners", "type": "boolean", "optional": true, "default": null }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__upsample_bilinear",
+      "inputs": [
+        { "name": "input", "type": "Tensor" },
+        { "name": "size", "type": "int64", "optional": true, "default": null },
+        { "name": "scale_factor", "type": "int64", "optional": true, "default": null }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
+    },
+    {
+      "name": "aten::__upsample_bilinear.scale_list",
+      "inputs": [
+        { "name": "input", "type": "Tensor" },
+        { "name": "size", "type": "int64", "optional": true, "default": null },
+        { "name": "scale_factor", "type": "int64[]", "optional": true, "default": null }
+      ],
+      "outputs": [
+        { "type": "Tensor" }
+      ]
     }
-  ]
+]
 }

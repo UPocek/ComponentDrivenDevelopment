@@ -13,28 +13,25 @@
     fill: #1589e0;
   }
 
-  .pale_line_av{
+  .pale_line_av {
     fill: #1b1b1b;
     stroke: #fdd5d5 !important;
     stroke-width: 3px;
   }
 
-  .pale_node_av
-  {
+  .pale_node_av {
     cursor: pointer;
-    fill: #54a2de  !important;
+    fill: #54a2de !important;
   }
 
   .hovered_node_av {
-
     cursor: pointer;
-    fill: #015696  !important;
+    fill: #015696 !important;
   }
 
-
-  .hovered_line_av{
+  .hovered_line_av {
     fill: #1b1b1b;
-    stroke: #f54f4f  !important;
+    stroke: #f54f4f !important;
     stroke-width: 3px;
   }
   #av_svg {
@@ -43,8 +40,8 @@
     left: 50%;
   }
 
-    #av_svg:focus{
-    outline:none !important;
+  #av_svg:focus {
+    outline: none !important;
   }
 </style>
 <script>
@@ -55,108 +52,115 @@
     output += `DESCRIPTION: ${clickedElement.getAttribute("desc")}\n`;
     alert(output);
   }
-     let selected_node_av = null;
+  let selected_node_av = null;
 
-   function hoverNode(node){
-       d3.select('.links')
-               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
-               .attr('class', 'line_av hovered_line_av')
-       d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class', 'node_av hovered_node_av')
-
-   }
-   function dropHover(node){
-     if(selected_node_av == null) {
-       d3.select('.links')
-               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
-               .attr('class', 'line_av')
-      d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class','node_av')
-     }
-     else{
-        d3.select('.links')
-               .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
-               .attr('class', 'line_av pale_line_av')
-        d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class','node_av pale_node_av')
-       d3.select('.links')
-       .selectAll(`line[source='${selected_node_av.id}'],line[target='${selected_node_av.id}']`)
-       .attr('class','line_av hovered_line_av')
-       d3.select(`.node_av[id='${selected_node_av.id}']`).selectAll('rect').attr('class','node_av hovered_node_av')
-     }
-     }
-  function nodeClick(node) {
-
-    if(selected_node_av != null){
-      d3.select('.links')
-       .selectAll(`line[source='${selected_node_av.id}'],line[target='${selected_node_av.id}']`)
-       .attr('class','line_av pale_line_av')
-      d3.select(`.node_av[id='${selected_node_av.id}']`).selectAll('rect').attr('class','node_av pale_node_av')
+  function hoverNode(node) {
+    d3.select(".links")
+      .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+      .attr("class", "line_av hovered_line_av");
+    d3.select(`.node_av[id='${node.id}']`)
+      .selectAll("rect")
+      .attr("class", "node_av hovered_node_av");
+  }
+  function dropHover(node) {
+    if (selected_node_av == null) {
+      d3.select(".links")
+        .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+        .attr("class", "line_av");
+      d3.select(`.node_av[id='${node.id}']`)
+        .selectAll("rect")
+        .attr("class", "node_av");
+    } else {
+      d3.select(".links")
+        .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+        .attr("class", "line_av pale_line_av");
+      d3.select(`.node_av[id='${node.id}']`)
+        .selectAll("rect")
+        .attr("class", "node_av pale_node_av");
+      d3.select(".links")
+        .selectAll(
+          `line[source='${selected_node_av.id}'],line[target='${selected_node_av.id}']`
+        )
+        .attr("class", "line_av hovered_line_av");
+      d3.select(`.node_av[id='${selected_node_av.id}']`)
+        .selectAll("rect")
+        .attr("class", "node_av hovered_node_av");
     }
-    d3.select('.links')
-       .selectAll(`line`)
-       .attr('class','line_av pale_line_av')
-      d3.select(`.nodes`).selectAll('.node_av').selectAll('rect').attr('class','node_av pale_node_av')
-      d3.selectAll('marker').attr('fill','#fdd5d5')
+  }
+  function nodeClick(node) {
+    if (selected_node_av != null) {
+      d3.select(".links")
+        .selectAll(
+          `line[source='${selected_node_av.id}'],line[target='${selected_node_av.id}']`
+        )
+        .attr("class", "line_av pale_line_av");
+      d3.select(`.node_av[id='${selected_node_av.id}']`)
+        .selectAll("rect")
+        .attr("class", "node_av pale_node_av");
+    }
+    d3.select(".links").selectAll(`line`).attr("class", "line_av pale_line_av");
+    d3.select(`.nodes`)
+      .selectAll(".node_av")
+      .selectAll("rect")
+      .attr("class", "node_av pale_node_av");
+    d3.selectAll("marker").attr("fill", "#fdd5d5");
 
-    selected_node_av = node
-    d3.select('.links')
-     .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
-     .attr('class','line_av hovered_line_av')
-     d3.select(`.node_av[id='${node.id}']`).selectAll('rect').attr('class','node_av hovered_node_av')
-        sendToCore(findNodeIds(selected_node_av.id));
-
+    selected_node_av = node;
+    d3.select(".links")
+      .selectAll(`line[source='${node.id}'],line[target='${node.id}']`)
+      .attr("class", "line_av hovered_line_av");
+    d3.select(`.node_av[id='${node.id}']`)
+      .selectAll("rect")
+      .attr("class", "node_av hovered_node_av");
+    sendToCore(findNodeIds(selected_node_av.id));
   }
 
-  function clearColors(){
-    d3.select('.links')
-       .selectAll(`line`)
-       .attr('class','line_av')
-      d3.select(`.nodes`).selectAll('.node_av').
-      selectAll('rect').attr('class','node_av')
-      d3.selectAll('marker').attr('fill','#fdb0b0')
+  function clearColors() {
+    d3.select(".links").selectAll(`line`).attr("class", "line_av");
+    d3.select(`.nodes`)
+      .selectAll(".node_av")
+      .selectAll("rect")
+      .attr("class", "node_av");
+    d3.selectAll("marker").attr("fill", "#fdb0b0");
     selected_node_av = null;
     nodelist = []
     sendToCore(nodelist)
   }
-  function findNodeIds(nodeId){
-     let iteration_node_id = nodeId;
-     let nodeList = [];
-     nodeList.push(Number.parseInt(nodeId));
-     while(true) {
-       let line_test = d3.selectAll(`line[target='${iteration_node_id}'`)
-       let lines_for_ids = line_test._groups[0]
-       console.log(lines_for_ids)
-       if(lines_for_ids.length!=0){
-         let line = lines_for_ids[0];
-         iteration_node_id = line.__data__.source.id
-         nodeList.push(iteration_node_id)
-
-       }
-       else{
-            return nodeList
-       }
-     }
+  function findNodeIds(nodeId) {
+    let iteration_node_id = nodeId;
+    let nodeList = [];
+    nodeList.push(Number.parseInt(nodeId));
+    while (true) {
+      let line_test = d3.selectAll(`line[target='${iteration_node_id}'`);
+      let lines_for_ids = line_test._groups[0];
+      if (lines_for_ids.length != 0) {
+        let line = lines_for_ids[0];
+        iteration_node_id = line.__data__.source.id;
+        nodeList.push(iteration_node_id);
+      } else {
+        return nodeList;
+      }
+    }
   }
-   function sendToCore(nodeList) {
-     console.log("NODELIST")
-     console.log(nodeList)
-     fetch("/select_treeview_node", {
-       method: 'POST',
-       credentials: 'same-origin',
-       headers: {
-         'Accept': 'application/json',
-         'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-         'X-CSRFToken': csrftoken,
-       },
-       body: JSON.stringify(nodeList) //JavaScript object of data to POST
-     })
-             .then(value => {
-               location.reload()
-             })
-     return;
-   }
+  function sendToCore(nodeList) {
+    fetch("/select_treeview_node", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRFToken": csrftoken,
+      },
+      body: JSON.stringify(nodeList),
+    }).then((value) => {
+      location.reload();
+    });
+    return;
+  }
 </script>
-<svg id="av_svg" width="100%" height="100%">
-  <g class="links"></g>
-  <g class="nodes"></g>
+<svg id="av_svg" width="100%" height="100%" class="bird">
+  <g class="links bird_links"></g>
+  <g class="nodes bird_nodes"></g>
 </svg>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -351,7 +355,7 @@
               lineHeight = 1.1, // ems
               x = text.attr("x"),
               y = text.attr("y"),
-              dy = 0, //parseFloat(text.attr("dy")),
+              dy = 0,
               tspan = text.text(null)
                           .append("tspan")
                           .attr("x", x)

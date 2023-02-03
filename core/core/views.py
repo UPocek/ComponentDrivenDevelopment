@@ -27,6 +27,7 @@ def index(request):
     context['all_search_queries'] = apps.get_app_config("core").applied_searches
     context['all_filter_queries'] = apps.get_app_config("core").applied_filters
     context['tree_view'] = apps.get_app_config("core").make_tree_view_node_dict()
+    context['bird_view'] = apps.get_app_config("core").make_bird_view()
     context['selected_graph'] = apps.get_app_config("core").get_graph_to_use()
     return render(request, 'core/index.html', context=context)
 
@@ -84,9 +85,20 @@ def load_visualizator(request,visualizator_name):
             graph_to_visualise = apps.get_app_config("core").get_graph_to_use()
             if graph_to_visualise is not None:
                 context['content'] = plugin.show(graph_to_visualise,context['selected_node'])
+                if visualizator_name == 'Ar visualizator':
+                    return render(request, 'core/empty.html', context=context)
                 return render(request, 'core/graph.html', context=context)
 
     return HttpResponse("None of visualizato plugins are installed or no graph selected")
+
+@csrf_exempt
+def select_treeview_node(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    content = body
+    data = content
+    context['treeview_selector_list'] = data
+    return HttpResponseRedirect(reverse('index'))
 
 def delete_helper_graphs():
     all_graphs_from_db = Graph.objects.all()
@@ -110,3 +122,4 @@ def select_treeview_node(request):
         context['treeview_selector_list'] = data
         context['selected_node'] = data[0]
     return HttpResponseRedirect(reverse('index'))
+

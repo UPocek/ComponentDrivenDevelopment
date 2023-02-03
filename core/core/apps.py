@@ -167,6 +167,13 @@ class CoreConfig(AppConfig):
                 nodes_dict[str(node.id)]['neighbours'].append(neighbour)
         return nodes_dict
 
+    def make_bird_view(self):
+        selected_graph = self.get_graph_to_use()
+        if selected_graph is None:
+            return {}
+        nodes = selected_graph.get_all_nodes()
+        return len(nodes)
+
 def load_plugins(group):
     plugins = []
     for entry_point in pkg_resources.iter_entry_points(group=group):
